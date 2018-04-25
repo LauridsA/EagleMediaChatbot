@@ -10,12 +10,15 @@ use App\Http\Controllers\FAQControllerConversation;
 use App\Http\Controllers\SaaSControllerConversation;
 use App\Http\Controllers\ProjectControllerConversation;
 use App\Http\Controllers\UserController;
+use App\Message;
 
 class EntrypointBot extends Conversation
 {
     public function welcomeMessage()
     {
-        $this->say('Bip bop, jeg er en bot! (Vær sød ved mig ..) Velkommen hos EagleMedia!');
+        $message = Message::find(1);
+        $this->getBot()->typesAndWaits($message['delay']);
+        $this->say($message['message']);
     }
 
     public function initialQuestion()
@@ -142,6 +145,6 @@ class EntrypointBot extends Conversation
     }
     public function endConversation()
     {
-        $this->say('Tak for denne gang, fag!');
+        $this->say('Tak for denne gang');
     }
 }
