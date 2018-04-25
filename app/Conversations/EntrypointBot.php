@@ -9,6 +9,7 @@ use BotMan\BotMan\Messages\Conversations\Conversation;
 use App\Http\Controllers\FAQControllerConversation;
 use App\Http\Controllers\SaaSControllerConversation;
 use App\Http\Controllers\ProjectControllerConversation;
+use App\Http\Controllers\UserController;
 
 class EntrypointBot extends Conversation
 {
@@ -55,8 +56,11 @@ class EntrypointBot extends Conversation
         $this->ask($question, function (Answer $answer) {
             switch ($answer->getValue()){
                 case 'Ja':
-                    // hmmm ... do sth here.
-                    $this->say('Fedt! Over email?'); // TODO subscription conversation?
+                    $userController = new UserController();
+                    $userController->addUserSubscription("ok");
+                    $this->getBot()->typesAndWaits(2);
+                    $this->say('Fedt! Jeg skriver til dig når der er nyheder'); // TODO subscription conversation?
+                    $this->topicQuestion();
                     break;
                 case 'Aldrig':
                     $this->say('Okay! Du kan altid skifte din mening ved at bruge burger-menuen nederst til venstre');
