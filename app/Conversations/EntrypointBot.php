@@ -56,11 +56,8 @@ class EntrypointBot extends Conversation
         $this->ask($question, function (Answer $answer) {
             switch ($answer->getValue()){
                 case 'Ja':
-                    $userController = new UserController();
-                    $userController->addUserSubscription("ok");
                     $this->getBot()->typesAndWaits(2);
-                    $this->say('Fedt! Jeg skriver til dig når der er nyheder'); // TODO subscription conversation?
-                    $this->topicQuestion();
+                    $this->subQuestion();
                     break;
                 case 'Aldrig':
                     $this->say('Okay! Du kan altid skifte din mening ved at bruge burger-menuen nederst til venstre');
@@ -71,6 +68,33 @@ class EntrypointBot extends Conversation
                     $this->subscriptionQuestion();
                     break;
             }
+        });
+    }
+
+    public function subQuestion()
+    {
+        $question = Question::create('Super. Så skal jeg bare lige bruge din email.')
+            >fallback('Unable to ask question')
+                ->callbackId('sub_question');
+        $this->ask($question, function (Answer $answer) {
+            if($answer->getText().strtolower() == 'nej'){
+                   $this->getBot()->typesAndWaits(2);
+                   $this->say('Det er helt okay. Du kan altid skifte din mening ved at bruge burger-menuen nederst til venstre');
+                   $this->getBot()->typesAndWaits(3);
+                   $this->topicQuestion();
+           } elseif (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
+                // valid address
+                $usrCtr = new UserController();
+                $usrCtr->addUserSubscription('ok', $answer->getText());
+                $this->getBot()->typesAndWaits(2);
+                $this->say('Coolio. Jeg sender en besked når der sker noget nyt.');
+            } else {
+                // invalid address
+                $this->getBot()->typesAndWaits(2);
+                $this->say('Undskyld det fik jeg ikke lige fat i. Prøv igen.');
+                $this->subscriptionQuestion();
+            }
+
         });
     }
 

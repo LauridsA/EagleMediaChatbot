@@ -11,11 +11,11 @@ use App\Http\Controllers\Controller;
 class UserController extends Controller
 {
     //
-    public function addUserSubscription(String $userSub)
+    public function addUserSubscription(String $userSub, String $email)
     {
         $user = new User();
         $user->name = 'John';
-        $user->email = 'john@doe.com';
+        $user->email = email;
         $user->password = 'someplaintext';
         $user->subscription_key = $userSub;
 
