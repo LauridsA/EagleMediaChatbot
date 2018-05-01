@@ -9,8 +9,10 @@ use BotMan\BotMan\Messages\Conversations\Conversation;
 use App\Http\Controllers\FAQControllerConversation;
 use App\Http\Controllers\SaaSControllerConversation;
 use App\Http\Controllers\ProjectControllerConversation;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Message;
+use BotMan\Drivers\Facebook\FacebookDriver;
 
 class EntrypointBot extends Conversation
 {
@@ -29,6 +31,7 @@ class EntrypointBot extends Conversation
             ->addButtons([
                 Button::create('Ja da')->value('Ja'),
                 Button::create('Aldrig!!')->value('Aldrig'),
+                Button::create('get my ID ')->value('getID')
             ]);
         $this->ask($question, function (Answer $answer) {
             switch ($answer->getValue()){
@@ -38,6 +41,10 @@ class EntrypointBot extends Conversation
                 case 'Aldrig':
                     $this->say('Okay!');
                     $this->topicQuestion();
+                    break;
+                case 'getID':
+                    $sender = $this->bot->getMessage()->getPayload();
+                    $this->say($sender);
                     break;
                 default:
                     $this->say('hvad? Brug helst knapperne ....');
@@ -60,7 +67,12 @@ class EntrypointBot extends Conversation
             switch ($answer->getValue()){
                 case 'Ja':
                     $this->getBot()->typesAndWaits(2);
-                    $this->subQuestion();
+                    $ctr = new SubscriptionController();
+                    //$this->bot->getMessage()->setText('pause');
+                    //$this->skipsConversation($this->bot->getMessage()); pause holder kun 1 request. derefter resume.
+                    $ctr->startSubscriptionConversation($this->getBot(), $this->bot->getUser()->getId()); // kommer ind i class OK
+                    // fortsætter direkte. dårlig design? ny convo? hears? what to do..
+                    //$this->topicQuestion();
                     break;
                 case 'Aldrig':
                     $this->say('Okay! Du kan altid skifte din mening ved at bruge burger-menuen nederst til venstre');
@@ -71,33 +83,6 @@ class EntrypointBot extends Conversation
                     $this->subscriptionQuestion();
                     break;
             }
-        });
-    }
-
-    public function subQuestion()
-    {
-        $question = Question::create('Super. Så skal jeg bare lige bruge din email.')
-            >fallback('Unable to ask question')
-                ->callbackId('sub_question');
-        $this->ask($question, function (Answer $answer) {
-            if($answer->getText().strtolower() == 'nej'){
-                   $this->getBot()->typesAndWaits(2);
-                   $this->say('Det er helt okay. Du kan altid skifte din mening ved at bruge burger-menuen nederst til venstre');
-                   $this->getBot()->typesAndWaits(3);
-                   $this->topicQuestion();
-           } elseif (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
-                // valid address
-                $usrCtr = new UserController();
-                $usrCtr->addUserSubscription('ok', $answer->getText());
-                $this->getBot()->typesAndWaits(2);
-                $this->say('Coolio. Jeg sender en besked når der sker noget nyt.');
-            } else {
-                // invalid address
-                $this->getBot()->typesAndWaits(2);
-                $this->say('Undskyld det fik jeg ikke lige fat i. Prøv igen.');
-                $this->subscriptionQuestion();
-            }
-
         });
     }
 
