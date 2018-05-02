@@ -50,14 +50,21 @@ class SubscriptionConversation extends Conversation
         $this->ask($question, function(Answer $answer)
         {
             if($answer->isInteractiveMessageReply() || $answer->getText() == 'tilbage'){
+                $this->say('Okay! Du kan altid skifte mening ved brug af burger-menuen nederst til højre');
                 return $this->exitConversation();
             }
 
             if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
-                $ctr = new ClientController();
-                $newClient = $ctr->saveNewClient($answer->getText());
-                $this->say('Din email er blevet registreret som: ' . $newClient['email']);
-                $this->bot->startConversation(new TopicConversation());
+                try {
+                    $ctr = new ClientController();
+                    $newClient = $ctr->saveNewClient($answer->getText());
+                    $this->say('Din email er blevet registreret som: ' . $newClient['email']);
+                    $this->exitConversation();
+                } catch (\Exception $exception) {
+                    $this->say('Der skete en fejl. Prøv igen senere.');
+                    return $this->exitConversation();
+                }
+
             } else {
                 $this->say('Det ser ud til, at der er en fejl i din email. Prøv igen.');
                 $this->subByEmail();
@@ -67,7 +74,6 @@ class SubscriptionConversation extends Conversation
 
     public function exitConversation()
     {
-        $this->say('Okay! Du kan altid skifte mening ved brug af burger-menuen nederst til højre');
         $topicCtr = new TopicController();
         $topicCtr->startTopicConversation($this->getBot());
     }
