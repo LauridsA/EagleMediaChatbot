@@ -68,7 +68,7 @@ class EntrypointBot extends Conversation
                 case 'Ja':
                     $this->getBot()->typesAndWaits(2);
                     $ctr = new SubscriptionController();
-                    $ctr->startSubscriptionConversation($this->getBot()); // kommer ind i class OK
+                    $ctr->startSubscriptionConversation($this->getBot());
                     break;
                 case 'Aldrig':
                     $this->say('Okay! Du kan altid skifte din mening ved at bruge burger-menuen nederst til venstre');

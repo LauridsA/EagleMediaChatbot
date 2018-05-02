@@ -2,12 +2,13 @@
 
 namespace App\Conversations;
 
+use App\Http\Controllers\ClientController;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
 use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Conversations\Conversation;
-use function foo\func;
+use App\Client;
 
 class SubscriptionConversation extends Conversation
 {
@@ -18,21 +19,21 @@ class SubscriptionConversation extends Conversation
             ->fallback('unable to ask question')
             ->callbackId('start_sub_convo')
             ->addButtons([
-                Button::create('Brug XXXX')->value('XXXX'), // TODO other way to do it? PSID?
-                Button::create('Brug Email')->value('FBemail'),
-                Button::create('Glemt det')->value('exitSub')
+                Button::create('Brug XXXX')->value('XXXX'),
+                Button::create('Brug Email')->value('email'),
+                Button::create('Glemt det')->value('exit')
             ]);
         $this->ask($question, function (Answer $answer)
         {
             switch ($answer->getValue())
             {
-                case 'FBemail':
+                case 'email':
                     $this->subByEmail();
                     break;
                 case 'XXXX':
                     $this->subByXXXX();
                     break;
-                case 'exitSub':
+                case 'exit':
                     $this->exitSub();
                     break;
 //                default:
@@ -59,8 +60,9 @@ class SubscriptionConversation extends Conversation
             }
             if (filter_var($email, FILTER_VALIDATE_EMAIL))
             {
-                $this->say('Din email er blevet registreret som: ' . $email);
-                //save email in DB
+                $ctr = new ClientController();
+                $newClient = $ctr->saveNewClient($email);
+                $this->say('Din email er blevet registreret som: ' . $newClient['email']);
             }
             else
             {
