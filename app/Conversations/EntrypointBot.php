@@ -68,11 +68,7 @@ class EntrypointBot extends Conversation
                 case 'Ja':
                     $this->getBot()->typesAndWaits(2);
                     $ctr = new SubscriptionController();
-                    //$this->bot->getMessage()->setText('pause');
-                    //$this->skipsConversation($this->bot->getMessage()); pause holder kun 1 request. derefter resume.
-                    $ctr->startSubscriptionConversation($this->getBot(), $this->bot->getUser()->getId()); // kommer ind i class OK
-                    // fortsætter direkte. dårlig design? ny convo? hears? what to do..
-                    //$this->topicQuestion();
+                    $ctr->startSubscriptionConversation($this->getBot()); // kommer ind i class OK
                     break;
                 case 'Aldrig':
                     $this->say('Okay! Du kan altid skifte din mening ved at bruge burger-menuen nederst til venstre');

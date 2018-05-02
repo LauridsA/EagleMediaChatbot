@@ -50,27 +50,24 @@ class SubscriptionConversation extends Conversation
 
     public function subByEmail()
     {
-        //TODO det skal ikke være et question, men et vent på noget ...
-        $question = Question::create('Skriv din email til mig :)')
-            ->fallback('unable to ask question')
-            ->callbackId('enter_email');
-        $this->ask($question, function (Answer $answer) {
-            switch ($answer->getValue())
+        $this->ask('Fedt! Skriv din email til mig (eksempel: KasperStuck@gmail.com). Hvis du vil ud, skriv "tilbage"', function(Answer $answer) {
+            // Save result
+            $email = $answer->getText();
+            if($email == 'tilbage')
             {
-                case 'FBemail':
-                    $this->subByEmail();
-                    break;
-                case 'XXXX':
-                    $this->subByXXXX();
-                    break;
-                case 'exitSub':
-                    $this->exitSub();
-                    break;
-                default:
-                    $this->say('hvad? Brug helst knapperne ....');
-                    $this->subByEmail();
-                    break;
+                $this->exitSub();
             }
+            if (filter_var($email, FILTER_VALIDATE_EMAIL))
+            {
+                $this->say('Din email er blevet registreret som: ' . $email);
+                //save email in DB
+            }
+            else
+            {
+                $this->say('Det ser ud til, at der er en fejl i din email. prøv igen.');
+                $this->subByEmail();
+            }
+
         });
     }
 

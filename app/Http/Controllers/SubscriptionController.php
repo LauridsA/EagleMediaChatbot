@@ -10,10 +10,10 @@ use BotMan\BotMan\BotMan;
 class SubscriptionController extends Controller
 {
     //recieve bot instance and start sub convo
-    public function startSubscriptionConversation(Botman $bot, string $recipientID)
+    public function startSubscriptionConversation(Botman $bot)
     {
 
-        $bot->startConversation(new SubscriptionConversation(), $recipientID, FacebookDriver::class);
+        $bot->startConversation(new SubscriptionConversation());
         //grab info from conversation and send to DB later
     }
 }
