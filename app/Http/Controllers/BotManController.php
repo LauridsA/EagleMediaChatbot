@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Conversations\WelcomeConversation;
 use BotMan\BotMan\BotMan;
 use Illuminate\Http\Request;
 use App\Conversations\EntrypointBot;
@@ -32,6 +33,6 @@ class BotManController extends Controller
      */
     public function startConversation(BotMan $bot)
     {
-        $bot->startConversation(new EntrypointBot());
+        $bot->startConversation(new WelcomeConversation());
     }
 }
