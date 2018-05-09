@@ -8,6 +8,6 @@ class Message extends Model
 {
     //
     protected $fillable = [
-      'message', 'image', 'delay', 'next_msg'
+      'message', 'image', 'delay'
     ];
 }

@@ -15,7 +15,7 @@ class UserController extends Controller
     {
         $user = new User();
         $user->name = 'John';
-        $user->email = email;
+        $user->email = $email;
         $user->password = 'someplaintext';
         $user->subscription_key = $userSub;
 

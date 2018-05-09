@@ -45,12 +45,12 @@ class SubscriptionConversation extends Conversation
             ->fallback('unable to ask question')
             ->callbackId('sub_by_email')
             ->addButtons([
-                Button::create('Glemt det')->value('exit')
+                Button::create('Glem det')->value('exit')
             ]);
         $this->ask($question, function(Answer $answer)
         {
-            if($answer->isInteractiveMessageReply() || $answer->getText() == 'tilbage'){
-                $this->say('Okay! Du kan altid skifte mening ved brug af burger-menuen nederst til højre');
+            if($answer->getText() == 'tilbage'){
+                $this->say('Okay! Du kan altid skifte mening ved brug af burger-menuen nederst til venstre');
                 return $this->exitConversation();
             }
 

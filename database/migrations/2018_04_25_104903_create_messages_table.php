@@ -18,7 +18,6 @@ class CreateMessagesTable extends Migration
             $table->text('message');
             $table->string('image');
             $table->integer('delay');
-            $table->integer('next_msg');
             $table->timestamps();
         });
     }

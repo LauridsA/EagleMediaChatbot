@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateButtonsTable extends Migration
+class CreateCustomButtonsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,16 @@ class CreateButtonsTable extends Migration
      */
     public function up()
     {
-        Schema::create('buttons', function (Blueprint $table) {
+        Schema::create('custom_buttons', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('action');
+            $table->string('value');
+            $table->unsignedInteger('mid');
+            $table->unsignedInteger('next_message_id');
             $table->timestamps();
+            $table->foreign('mid')->references('id')->on('messages');
+            $table->foreign('next_message_id')->references('id')->on('messages');
+
         });
     }
 
@@ -28,6 +33,6 @@ class CreateButtonsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('buttons');
+        Schema::dropIfExists('custom_buttons');
     }
 }
