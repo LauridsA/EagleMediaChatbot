@@ -15,7 +15,9 @@ class WelcomeConversation extends Conversation
     {
         $message = Message::find($id);
         $buttons = CustomButton::where('mid', $id)->get();
-
+        if(strpos($message['message'], 'tilmelde dig' !== false)) {
+            $this->subscription($id);
+        }
         $buttonArray = [];
         $responseArray = [];
         $buttonValues = [];
@@ -41,11 +43,18 @@ class WelcomeConversation extends Conversation
             $responseArray[] =
                 [
                     'pattern' => $button['value'],
-                    'callback' => function (Answer $answer) use ($button) {
+                    'callback' => function () use ($button) {
+                        if ($button['interest_trigger'] != null){
+                            $this->logInterest($button['interest_trigger'], $this->bot->getUser()->getId());
+                        }
+                        if ($button['next_message_id'] != null)
                         $this->makeQuestion($button['next_message_id']);
                     }
                 ];
         }
+        $responseArray[] = [
+            'pattern' => '.com|.dk|.se|.no|.de|.co.uk',
+            'callback' => function (Answer $answer) {
 
         // Append responseArray to catch non-button messaging
         $responseArray[] = [
@@ -72,5 +81,33 @@ class WelcomeConversation extends Conversation
     public function run()
     {
         $this->makeQuestion(2);
+    }
+
+    public function logInterest($interest, $user_id) {
+        $ctr = new ClientController();
+        $ctr->saveNewInterest($interest, $user_id);
+    }
+
+    public function subscription($id) {
+        $message = Message::find($id);
+        $buttons = CustomButton::where('mid', $id)->get();
+        $buttonArray = [];
+        foreach ($buttons as $button) {
+            $buttonArray[] = Button::create($button['name'])->value($button['value']);
+        }
+
+        $question = Question::create($message['message'])->addButtons($buttonArray);
+        $this->ask($question, function (Answer $answer, $buttons) {
+            if($answer->getValue() == $buttons[0]['value']){
+                $this->say('fag');
+                $this->makeQuestion(2);
+            }
+            if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
+                $ctr = new ClientController();
+                $newClient = $ctr->saveNewClient($answer->getText());
+                $this->say('Din email er blevet registreret som: ' . $newClient['email']);
+                $this->makeQuestion(2);
+            }
+        });
     }
 }
