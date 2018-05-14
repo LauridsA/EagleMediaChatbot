@@ -55,6 +55,9 @@ class WelcomeConversation extends Conversation
                 [
                     'pattern' => $button['value'],
                     'callback' => function () use ($button) {
+                        if ($button['interest_trigger'] != null){
+                            $this->logInterest($button['interest_trigger'], $this->bot->getUser()->getId());
+                        }
                         if ($button['next_message_id'] != null)
                         $this->makeQuestion($button['next_message_id']);
                     }
@@ -79,6 +82,11 @@ class WelcomeConversation extends Conversation
         ];
         $question = Question::create($message['message'])->addButtons($buttonArray);
         $this->ask($question, $responseArray);
+    }
+
+    public function logInterest($interest, $user_id) {
+        $ctr = new ClientController();
+        $ctr->saveNewInterest($interest, $user_id);
     }
 
     public function subscription($id) {
