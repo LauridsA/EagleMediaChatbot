@@ -23,7 +23,7 @@ class WelcomeConversation extends Conversation
             echo 'Caught exception: ', $exception->getMessage(), '\n';
             $this->getBot()->typesAndWaits(2);
             $this->say('Beep beoop! Noget gik galt, så her er en fallback-besked i stedet.');
-        } finally /* TODO finally block might make the bot run in exception state for the rest of lifetime */{
+        } finally /* TODO finally block might make the bot run in exception state for the rest of lifetime */ {
             $this->initialQuestion();
         }
     }
@@ -42,7 +42,7 @@ class WelcomeConversation extends Conversation
             ]);
         $this->ask($question, function (Answer $answer) {
             $button = CustomButton::where('mid', 1)->get();
-            switch ($answer->getValue()){
+            switch ($answer->getValue()) {
                 case $button[0]['value']:
                     $this->subQuestion();
                     break;
@@ -72,7 +72,7 @@ class WelcomeConversation extends Conversation
                 Button::create('Aldrig!!')->value('Nej')
             ]);
         $this->ask($question, function (Answer $answer) {
-            switch ($answer->getValue()){
+            switch ($answer->getValue()) {
                 case 'Ja':
                     $subCtr = new SubscriptionController();
                     $subCtr->startSubscriptionConversation($this->getBot());
@@ -96,20 +96,7 @@ class WelcomeConversation extends Conversation
      */
     public function run()
     {
-        //$this->welcomeMessage();
-        //$this->initialQuestion();
-        $next_message = 1;
-//        while(!is_null ($next_message)) {
-//            if (is_numeric($next_message)) {
-//            $next_message = $this->makeQuestion($next_message);
-//            }
-//            if (!is_numeric($next_message)) {
-//                $next_message = $this->makeMessage($next_message);
-//            }
-//          }
-
-        $this->makeQuestion($next_message);
-        //$this->say($next_message);
+        $this->makeQuestion(2);
     }
 
     public function endConversation()
@@ -119,34 +106,35 @@ class WelcomeConversation extends Conversation
 
     public function makeQuestion($id)
     {
-        $message = Message::find($id); //giver et object
-        $buttons = CustomButton::where('mid', $id)->get(); //giver et array
-        $buttonarray = [];
-        foreach ($buttons as $button)
-        {
-            $buttonarray[] = Button::create($button['name'])->value($button['value']);
+        $message = Message::find($id);
+        $buttons = CustomButton::where('mid', $id)->get();
+        $buttonArray = [];
+        foreach ($buttons as $button) {
+            $buttonArray[] = Button::create($button['name'])->value($button['value']);
+        }
+
+        $buttonValues = [];
+        foreach ($buttons as $button) {
+            $buttonValues[] = [
+                'name' => $button['name'],
+                'value' => $button['value'],
+                'mid' => $button['mid'],
+                'next_message_id' => $button['next_message_id']
+            ];
         }
 
         $responseArray = [];
-        foreach ($buttons as $option) {
-            $responseArray[] = [
-                'pattern' => $option['value'].'',
-                'callback' => function($option){
-                    $this->say('fag ' . $option['id']);
-                }
-            ];
+        foreach ($buttonValues as $button) {
+            $responseArray[] =
+                [
+                    'pattern' => $button['value'],
+                    'callback' => function () use ($button) {
+                        $this->makeQuestion($button['next_message_id']);
+                    }
+                ];
         }
-//        $responseArray[] = [
-//            'pattern' => '.*',
-//            'callback'=>function($id){
-//                $this->say('hvad? Brug helst knapperne ....');
-//                $this->makeQuestion($id.'');
-//            }
-//        ];
-        $question = Question::create($message['message'])
-            ->addButtons(
-                $buttonarray
-            );
-        //$this->ask($question, $responseArray);
+
+        $question = Question::create($message['message'])->addButtons($buttonArray);
+        $this->ask($question, $responseArray);
     }
 }
