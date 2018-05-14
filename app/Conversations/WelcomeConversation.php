@@ -128,8 +128,15 @@ class WelcomeConversation extends Conversation
             $responseArray[] =
                 [
                     'pattern' => $button['value'],
-                    'callback' => function () use ($button) {
-                        $this->makeQuestion($button['next_message_id']);
+                    'callback' => function (Answer $answer) use ($button) {
+                        if ($answer->isInteractiveMessageReply()) {
+
+                            $this->say('Is button: ' . $answer->isInteractiveMessageReply());
+                            $this->makeQuestion($button['next_message_id']);
+                        } else {
+//                            $this->say('Is button: ' . $answer->isInteractiveMessageReply());
+                            $this->say("faggot");
+                        }
                     }
                 ];
         }
