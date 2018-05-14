@@ -18,7 +18,7 @@ class CreateCustomButtonsTable extends Migration
             $table->string('name');
             $table->string('value');
             $table->unsignedInteger('mid');
-            $table->unsignedInteger('next_message_id');
+            $table->unsignedInteger('next_message_id')->nullable();
             $table->timestamps();
             $table->foreign('mid')->references('id')->on('messages');
             $table->foreign('next_message_id')->references('id')->on('messages');
