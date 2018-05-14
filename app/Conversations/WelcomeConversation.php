@@ -12,6 +12,12 @@ use App\CustomButton;
 
 class WelcomeConversation extends Conversation
 {
+    /**
+     * This is the core of the chatbot conversation.
+     * Recursively generates general questions from the database.
+     *
+     * @param $id message to load from the database
+     */
     public function makeQuestion($id)
     {
         $message = Message::find($id);
@@ -21,6 +27,7 @@ class WelcomeConversation extends Conversation
         $responseArray = [];
         $buttonValues = [];
 
+        // TODO: this is a poor way to check
         // check if message is subscription
         if (strpos($message['message'], 'tilmelde dig' !== false)) {
             $this->subscription($id);
@@ -82,6 +89,7 @@ class WelcomeConversation extends Conversation
                 $this->say('fag');
                 $this->makeQuestion(2);
             }
+
             if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
                 $ctr = new ClientController();
                 $newClient = $ctr->saveNewClient($answer->getText());
@@ -91,12 +99,19 @@ class WelcomeConversation extends Conversation
         });
     }
 
+    /**
+     * Used to log a users traversal of the bot and save subjects of potential interests
+     *
+     * @param $interest
+     * @param $user_id
+     */
     public function logInterest($interest, $user_id)
     {
         $ctr = new ClientController();
         $ctr->saveNewInterest($interest, $user_id);
     }
 
+    // TODO: What's this OwO
     public function subscription($id)
     {
         $message = Message::find($id);
