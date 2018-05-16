@@ -44,4 +44,12 @@ class SubscriptionConversation extends Conversation
             }
         });
     }
+
+    /**
+     * @return mixed
+     */
+    public function run()
+    {
+        // TODO: Implement run() method.
+    }
 }
