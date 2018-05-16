@@ -2,47 +2,66 @@
 
 namespace App\Conversations;
 
+use App\Http\Controllers\BotManController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\TopicController;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Conversations\Conversation;
+use App\Message;
+use App\CustomButton;
 
 class SubscriptionConversation extends Conversation
 {
 
-    public function subByEmail()
+
+    public function subscriptionQuestion($id)
     {
-        $question = Question::create('Fedt! Skriv din email til mig (eksempel: KasperStuck@gmail.com). Hvis du vil ud så tryk på "Glem det" eller skriv "tilbage".')
-            ->fallback('unable to ask question')
-            ->callbackId('sub_by_email')
-            ->addButtons([
-                Button::create('Glem det')->value('exit')
-            ]);
-        $this->ask($question, function(Answer $answer)
-        {
-            if($answer->getText() == 'tilbage'){
-                $this->say('Okay! Du kan altid skifte mening ved brug af burger-menuen nederst til venstre');
-                return $this->exitConversation();
+        $message = Message::find($id);
+        $buttons = CustomButton::where('mid', $id)->get();
+        $buttonArray = [];
+        foreach ($buttons as $button) {
+            $buttonArray[] = Button::create($button['name'])->value($button['value']);
+        }
+        $question = Question::create($message['message'])->addButtons($buttonArray);
+        $this->ask($question, function (Answer $answer, $buttons) {
+            if ($answer->getValue() == $buttons[1]['value']) {
+                $this->say('fag');
+                $ctr = new BotManController();
+                $ctr->startConversation($this->getBot());
+            }
+            if ($answer->getValue() == $buttons[0]['value']) {
+                $this->subscription(7);
+            }
+        });
+    }
+
+    public function subscription($id)
+    {
+        $message = Message::find($id);
+        $buttons = CustomButton::where('mid', $id)->get();
+        $buttonArray = [];
+        foreach ($buttons as $button) {
+            $buttonArray[] = Button::create($button['name'])->value($button['value']);
+        }
+
+        $question = Question::create($message['message'])->addButtons($buttonArray);
+        $this->ask($question, function (Answer $answer, $buttons) {
+            if ($answer->getValue() == $buttons[0]['value']) {
+                $this->say('fag');
+                $ctr = new BotManController();
+                $ctr->startConversation($this->getBot());
             }
 
             if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
-                try {
-                    $ctr = new ClientController();
-                    $newClient = $ctr->saveNewClient($answer->getText());
-                    $this->say('Din email er blevet registreret som: ' . $newClient['email']);
-                    $this->exitConversation();
-                } catch (\Exception $exception) {
-                    $this->say('Der skete en fejl. Prøv igen senere.');
-                    return $this->exitConversation();
-                }
-
-            } else {
-                $this->say('Det ser ud til, at der er en fejl i din email. Prøv igen.');
-                $this->subByEmail();
+                $ctr = new ClientController();
+                $newClient = $ctr->saveNewClient($answer->getText());
+                $this->say('Din email er blevet registreret som: ' . $newClient['email']);
+                $ctr = new BotManController();
+                $ctr->startConversation($this->getBot());
             }
         });
+
     }
 
     /**
@@ -50,6 +69,7 @@ class SubscriptionConversation extends Conversation
      */
     public function run()
     {
-        // TODO: Implement run() method.
+        $this->subscriptionQuestion(5);
+        // $this->IsThisYourMail(6) // TODO email suggestion with button
     }
 }

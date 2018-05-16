@@ -3,6 +3,7 @@
 namespace App\Conversations;
 
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\SubscriptionController;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
@@ -29,8 +30,9 @@ class WelcomeConversation extends Conversation
 
         // TODO: this is a poor way to check
         // check if message is subscription
-        if (strpos($message['message'], 'tilmelde dig' !== false)) {
-            $this->subscription($id);
+        if ($id === 5) {
+            $ctr = new SubscriptionController();
+            $ctr->startSubscriptionConversation($this->getBot());
         }
 
         // Create a button for each button found for a message
@@ -97,33 +99,6 @@ class WelcomeConversation extends Conversation
     {
         $ctr = new ClientController();
         $ctr->saveNewInterest($interest, $user_id);
-    }
-
-    // TODO: What's this OwO
-    public function subscription($id)
-    {
-        $message = Message::find($id);
-        $buttons = CustomButton::where('mid', $id)->get();
-        $buttonArray = [];
-        foreach ($buttons as $button) {
-            $buttonArray[] = Button::create($button['name'])->value($button['value']);
-        }
-
-        $question = Question::create($message['message'])->addButtons($buttonArray);
-        $this->ask($question, function (Answer $answer, $buttons) {
-            if ($answer->getValue() == $buttons[0]['value']) {
-                $this->say('fag');
-                $this->makeQuestion(2);
-            }
-
-            if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
-                $ctr = new ClientController();
-                $newClient = $ctr->saveNewClient($answer->getText());
-                $this->say('Din email er blevet registreret som: ' . $newClient['email']);
-                $this->makeQuestion(2);
-            }
-        });
-
     }
 
     /**
