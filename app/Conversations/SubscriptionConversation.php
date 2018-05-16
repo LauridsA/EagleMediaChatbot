@@ -20,20 +20,36 @@ class SubscriptionConversation extends Conversation
         $message = Message::find($id);
         $buttons = CustomButton::where('mid', $id)->get();
         $buttonArray = [];
+        $responseArray = [];
+        $buttonValues = [];
         foreach ($buttons as $button) {
             $buttonArray[] = Button::create($button['name'])->value($button['value']);
         }
+        foreach ($buttons as $button) {
+            $buttonValues[] = [
+                'name' => $button['name'],
+                'value' => $button['value'],
+                'mid' => $button['mid'],
+                'next_message_id' => $button['next_message_id']
+            ];
+        }
+        foreach ($buttonValues as $button) {
+            $responseArray[] =
+                [
+                    'pattern' => $button['value'],
+                    'callback' => function () use ($button) {
+                        if (($button['next_message_id'] == 7)) {
+                            $this->subscription($button['next_message_id']);
+                        } else if ($button['name'] == 'Afbryd') {
+                        $this->say('fag');
+                        $ctr = new BotManController();
+                        $ctr->startConversation($this->getBot());
+                        }
+                    }
+                ];
+        }
         $question = Question::create($message['message'])->addButtons($buttonArray);
-        $this->ask($question, function (Answer $answer, $buttons) {
-            if ($answer->getValue() == $buttons[1]['value']) {
-                $this->say('fag');
-                $ctr = new BotManController();
-                $ctr->startConversation($this->getBot());
-            }
-            if ($answer->getValue() == $buttons[0]['value']) {
-                $this->subscription(7);
-            }
-        });
+        $this->ask($question, $responseArray);
     }
 
     public function subscription($id)
