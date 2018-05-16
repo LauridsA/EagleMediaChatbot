@@ -29,9 +29,9 @@ class WelcomeConversation extends Conversation
 
         // TODO: this is a poor way to check
         // check if message is subscription
-//        if (strpos($message['message'], 'tilmelde dig' !== false)) {
-//            $this->subscription($id);
-//        }
+        if (strpos($message['message'], 'tilmelde dig' !== false)) {
+            $this->subscription($id);
+        }
 
         // Create a button for each button found for a message
         foreach ($buttons as $button) {
@@ -85,21 +85,6 @@ class WelcomeConversation extends Conversation
         $question = Question::create($message['message'])->addButtons($buttonArray);
         $this->ask($question, $responseArray);
 
-
-//        $question = Question::create($message['message'])->addButtons($buttonArray);
-//        $this->ask($question, function (Answer $answer, $buttons) {
-//            if ($answer->getValue() == $buttons[0]['value']) {
-//                $this->say('fag');
-//                $this->makeQuestion(2);
-//            }
-//
-//            if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
-//                $ctr = new ClientController();
-//                $newClient = $ctr->saveNewClient($answer->getText());
-//                $this->say('Din email er blevet registreret som: ' . $newClient['email']);
-//                $this->makeQuestion(2);
-//            }
-//        });
     }
 
     /**
@@ -124,6 +109,20 @@ class WelcomeConversation extends Conversation
             $buttonArray[] = Button::create($button['name'])->value($button['value']);
         }
 
+        $question = Question::create($message['message'])->addButtons($buttonArray);
+        $this->ask($question, function (Answer $answer, $buttons) {
+            if ($answer->getValue() == $buttons[0]['value']) {
+                $this->say('fag');
+                $this->makeQuestion(2);
+            }
+
+            if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
+                $ctr = new ClientController();
+                $newClient = $ctr->saveNewClient($answer->getText());
+                $this->say('Din email er blevet registreret som: ' . $newClient['email']);
+                $this->makeQuestion(2);
+            }
+        });
 
     }
 

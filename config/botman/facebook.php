@@ -44,6 +44,7 @@ return [
     */
     'start_button_payload' => 'YOUR_PAYLOAD_TEXT',
 
+
     /*
     |--------------------------------------------------------------------------
     | Facebook Greeting Text
