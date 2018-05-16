@@ -55,7 +55,7 @@ class SubscriptionConversation extends Conversation
 
             if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
                 $ctr = new ClientController();
-                $newClient = $ctr->saveNewClient($answer->getText());
+                $newClient = $ctr->saveNewClient($answer->getText(), $this->bot->getUser()->getFirstName(), $this->bot->getUser()->getLastName());
                 $this->say('Din email er blevet registreret som: ' . $newClient['email']);
                 $ctr = new BotManController();
                 $ctr->startConversation($this->getBot());

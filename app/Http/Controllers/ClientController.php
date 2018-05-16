@@ -8,10 +8,11 @@ use App;
 class ClientController extends Controller
 {
     //
-    public function saveNewClient(String $email)
+    public function saveNewClient(String $email, String $firstname, String $lastname)
     {
         // save new client to db and return it to caller. Needs all fillable fields set it seems.
-        return $client = App\Client::create(['email'=>$email, 'subscription_key'=>'ok', 'name'=>'John Doe']);
+        // TODO check if exists
+        return $client = App\Client::create(['email'=>$email, 'subscription_key'=>'ok', 'name'=>$firstname.' '.$lastname]);
     }
 
     public function saveNewInterest($interest, $user_id) {
