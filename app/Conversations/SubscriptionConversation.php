@@ -38,7 +38,7 @@ class SubscriptionConversation extends Conversation
                 [
                     'pattern' => $button['value'],
                     'callback' => function () use ($button) {
-                        if (($button['next_message_id'] == 7)) {
+                        if (true) { //($button['next_message_id'] == 7) TODO should not be true
                             $this->subscription($button['next_message_id']);
                         } else if ($button['name'] == 'Afbryd') {
                         $this->say('fag');
@@ -68,7 +68,7 @@ class SubscriptionConversation extends Conversation
                 $ctr = new BotManController();
                 $ctr->startConversation($this->getBot());
             }
-
+                //TODO dette bliver aldrig anvendt... why? crasher 
             if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
                 $ctr = new ClientController();
                 $newClient = $ctr->saveNewClient($answer->getText(), $this->bot->getUser()->getFirstName(), $this->bot->getUser()->getLastName());
