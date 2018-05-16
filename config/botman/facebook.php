@@ -42,7 +42,7 @@ return [
     | The payload which is sent when the Get Started Button is clicked.
     |
     */
-    'start_button_payload' => 'GET_STARTED_NEW_USER',
+    'start_button_payload' => 'YOUR_PAYLOAD_TEXT',
 
     /*
     |--------------------------------------------------------------------------
