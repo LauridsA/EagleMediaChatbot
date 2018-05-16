@@ -57,11 +57,11 @@ return [
         'greeting' => [
             [
                 'locale' => 'default',
-                'text' => 'Hello!',
+                'text' => 'Everything webshop!',
             ],
             [
                 'locale' => 'en_US',
-                'text' => 'Timeless apparel for the masses.',
+                'text' => 'Everything webshop!',
             ],
         ],
     ],
@@ -114,6 +114,6 @@ return [
     |
     */
     'whitelisted_domains' => [
-        'https://petersfancyapparel.com',
+        'https://eaglemedia.dk',
     ],
 ];
