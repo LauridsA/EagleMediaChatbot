@@ -42,7 +42,7 @@ return [
     | The payload which is sent when the Get Started Button is clicked.
     |
     */
-    'start_button_payload' => 'GET_STARTED',
+    'start_button_payload' => 'GET_STARTED_NEW_USER',
 
     /*
     |--------------------------------------------------------------------------
@@ -76,16 +76,21 @@ return [
     'persistent_menu' => [
         [
             'locale' => 'default',
-            'composer_input_disabled' => 'true',
+            'composer_input_disabled' => 'false',
             'call_to_actions' => [
                 [
-                    'title' => 'My Account',
+                    'title' => 'My Profil',
                     'type' => 'nested',
                     'call_to_actions' => [
                         [
-                            'title' => 'Pay Bill',
+                            'title' => 'Tilmeld Nyhedsbrev',
                             'type' => 'postback',
-                            'payload' => 'PAYBILL_PAYLOAD',
+                            'payload' => 'email',
+                        ],
+                        [
+                            'title' => 'Afmeld Nyhedsbrev',
+                            'type' => 'postback',
+                            'payload' => 'email',
                         ],
                     ],
                 ],
