@@ -54,30 +54,33 @@ class SubscriptionConversation extends Conversation
 
     public function subscription($id)
     {
-        $message = Message::find($id);
-        $buttons = CustomButton::where('mid', $id)->get();
-        $buttonArray = [];
-        foreach ($buttons as $button) {
-            $buttonArray[] = Button::create($button['name'])->value($button['value']);
+        try {
+            $message = Message::find($id);
+            $buttons = CustomButton::where('mid', $id)->get();
+            $buttonArray = [];
+            foreach ($buttons as $button) {
+                $buttonArray[] = Button::create($button['name'])->value($button['value']);
+            }
+
+            $question = Question::create($message['message'])->addButtons($buttonArray);
+            $this->ask($question, function (Answer $answer, $buttons) {
+                if ($answer->getValue() == $buttons[0]['value']) {
+                    $this->say('fag');
+                    $ctr = new BotManController();
+                    $ctr->startConversation($this->getBot());
+                }
+                //TODO dette bliver aldrig anvendt... why? crasher
+                if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
+                    $ctr = new ClientController();
+                    $newClient = $ctr->saveNewClient($answer->getText(), $this->bot->getUser()->getFirstName(), $this->bot->getUser()->getLastName());
+                    $this->say('Din email er blevet registreret som: ' . $newClient['email']);
+                    $ctr = new BotManController();
+                    $ctr->startConversation($this->getBot());
+                }
+            });
+        } catch (Exception $ex) {
+            Bugsnag::notifyException($ex);
         }
-
-        $question = Question::create($message['message'])->addButtons($buttonArray);
-        $this->ask($question, function (Answer $answer, $buttons) {
-            if ($answer->getValue() == $buttons[0]['value']) {
-                $this->say('fag');
-                $ctr = new BotManController();
-                $ctr->startConversation($this->getBot());
-            }
-                //TODO dette bliver aldrig anvendt... why? crasher 
-            if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
-                $ctr = new ClientController();
-                $newClient = $ctr->saveNewClient($answer->getText(), $this->bot->getUser()->getFirstName(), $this->bot->getUser()->getLastName());
-                $this->say('Din email er blevet registreret som: ' . $newClient['email']);
-                $ctr = new BotManController();
-                $ctr->startConversation($this->getBot());
-            }
-        });
-
     }
 
     /**
