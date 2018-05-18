@@ -38,9 +38,9 @@ class SubscriptionConversation extends Conversation
                 [
                     'pattern' => $button['value'],
                     'callback' => function () use ($button) {
-                        if (true) { //($button['next_message_id'] == 7) TODO should not be true
+                        if ($button['value'] == 'subByEmail') {
                             $this->subscription($button['next_message_id']);
-                        } else if ($button['name'] == 'Afbryd') {
+                        } else if ($button['value'] == 'cancel') {
                         $this->say('fag');
                         $ctr = new BotManController();
                         $ctr->startConversation($this->getBot());
@@ -58,26 +58,39 @@ class SubscriptionConversation extends Conversation
             $message = Message::find($id);
             $buttons = CustomButton::where('mid', $id)->get();
             $buttonArray = [];
+            $buttonValues = [];
             foreach ($buttons as $button) {
                 $buttonArray[] = Button::create($button['name'])->value($button['value']);
             }
+            foreach ($buttons as $button) {
+                $buttonValues[] = [
+                    'name' => $button['name'],
+                    'value' => $button['value'],
+                    'mid' => $button['mid'],
+                    'next_message_id' => $button['next_message_id']
+                ];
+            }
 
             $question = Question::create($message['message'])->addButtons($buttonArray);
-            $this->ask($question, function (Answer $answer, $buttons) {
-                if ($answer->getValue() == $buttons[0]['value']) {
+            $this->ask($question, function(Answer $answer) use ($buttonValues){
+                if($answer->getText() == 'cancel'){
                     $this->say('fag');
                     $ctr = new BotManController();
                     $ctr->startConversation($this->getBot());
-                }
-                //TODO dette bliver aldrig anvendt... why? crasher
-                if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
-                    $ctr = new ClientController();
-                    $newClient = $ctr->saveNewClient($answer->getText(), $this->bot->getUser()->getFirstName(), $this->bot->getUser()->getLastName());
-                    $this->say('Din email er blevet registreret som: ' . $newClient['email']);
-                    $ctr = new BotManController();
-                    $ctr->startConversation($this->getBot());
+                } else {
+                    if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
+                        $ctr = new ClientController();
+                        $newClient = $ctr->saveNewClient($answer->getText(), 'laurids', 'simonsen'); //$this->bot->getUser()->getFirstName(), $this->bot->getUser()->getLastName()
+                        $this->say('Din email er blevet registreret som: ' . $newClient['email']);
+                        $ctr = new BotManController();
+                        $ctr->startConversation($this->getBot());
+                    } else {
+                        $this->say('Det ser ud til, at der er noget galt med din email. Prøv igen!');
+                        $this->subscription(7);
+                    }
                 }
             });
+
         } catch (Exception $ex) {
             Bugsnag::notifyException($ex);
         }
