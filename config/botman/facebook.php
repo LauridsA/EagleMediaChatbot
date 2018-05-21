@@ -57,12 +57,8 @@ return [
         'greeting' => [
             [
                 'locale' => 'default',
-                'text' => 'Everything webshop!',
-            ],
-            [
-                'locale' => 'en_US',
-                'text' => 'Everything webshop!',
-            ],
+                'text' => 'Jeg er en bot! Og Kasper laver webshops!',
+            ]
         ],
     ],
 
@@ -80,16 +76,16 @@ return [
             'composer_input_disabled' => 'false',
             'call_to_actions' => [
                 [
-                    'title' => 'My Profil',
+                    'title' => 'Min Profil',
                     'type' => 'nested',
                     'call_to_actions' => [
                         [
-                            'title' => 'Tilmeld Nyhedsbrev',
+                            'title' => 'Tilmeld Nyhedsbrev (email)',
                             'type' => 'postback',
                             'payload' => 'email',
                         ],
                         [
-                            'title' => 'Afmeld Nyhedsbrev',
+                            'title' => 'Afmeld Nyhedsbrev (email)',
                             'type' => 'postback',
                             'payload' => 'email',
                         ],
@@ -97,7 +93,7 @@ return [
                 ],
                 [
                     'type' => 'web_url',
-                    'title' => 'Latest News',
+                    'title' => 'Indstillinger',
                     'url' => 'http://botman.io',
                     'webview_height_ratio' => 'full',
                 ],

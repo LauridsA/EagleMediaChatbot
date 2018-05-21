@@ -3,6 +3,7 @@
 namespace App\Conversations;
 
 use App\Http\Controllers\BotManController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\ClientController;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Question;
@@ -74,7 +75,6 @@ class SubscriptionConversation extends Conversation
             $question = Question::create($message['message'])->addButtons($buttonArray);
             $this->ask($question, function(Answer $answer) use ($buttonValues){
                 if($answer->getText() == 'cancel'){
-                    $this->say('fag');
                     $ctr = new BotManController();
                     $ctr->startConversation($this->getBot());
                 } else {
@@ -93,6 +93,38 @@ class SubscriptionConversation extends Conversation
 
         } catch (Exception $ex) {
             Bugsnag::notifyException($ex);
+        }
+    }
+
+    public function subToBroadcast($id) //TODO add data to DB with this
+    {
+        $message = Message::find($id);
+        $buttons = CustomButton::where('mid', $id)->get();
+        $buttonArray = [];
+        $buttonValues = [];
+        foreach ($buttons as $button) {
+            $buttonArray[] = Button::create($button['name'])->value($button['value']);
+        }
+        foreach ($buttons as $button) {
+            $buttonValues[] = [
+                'name' => $button['name'],
+                'value' => $button['value'],
+                'mid' => $button['mid'],
+                'next_message_id' => $button['next_message_id']
+            ];
+
+            $question = Question::create($message['message'])->addButtons($buttonArray);
+            $this->ask($question, function(Answer $answer) use ($buttonValues) {
+                if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) { //TODO if yes
+                    $ctr = new SubscriptionController();
+                    $ctr->addUserToLabel((string)$this->bot->getUser()->getId());
+                    $ctr = new BotManController();
+                    $ctr->startConversation($this->getBot());
+                } else { //TODO if no
+                    $this->say('Det ser ud til, at der er noget galt med din email. Prøv igen!');
+                    $this->subscription(7);
+                }
+            });
         }
     }
 

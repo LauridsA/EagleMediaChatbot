@@ -35,4 +35,9 @@ class BotManController extends Controller
     {
         $bot->startConversation(new WelcomeConversation());
     }
+
+    public function settingsUser()
+    {
+        // TODO implement the fullscreen menu thing
+    }
 }
