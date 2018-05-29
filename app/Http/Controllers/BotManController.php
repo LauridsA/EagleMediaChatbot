@@ -40,4 +40,9 @@ class BotManController extends Controller
     {
         // TODO implement the fullscreen menu thing... or not
     }
+
+    public function checkBroadcastStatus(BotMan $bot) {
+        $ctr = new SubscriptionController();
+        $ctr->checkBroadcastStatus($bot);
+    }
 }
