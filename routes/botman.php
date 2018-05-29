@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\BotManController;
+use App\Http\Controllers\SubscriptionController;
+
 
 $botman = resolve('botman');
 
@@ -12,4 +14,4 @@ $botman->hears('Hej', function ($bot) {
 $botman->hears('Kom i gang', BotManController::class . '@startConversation');
 $botman->hears('Get Started', BotManController::class . '@startConversation');
 $botman->hears('Start', BotManController::class . '@startConversation');
-$botman->hears('Indstillinger', BotManController::class . '@settingsUser');
+$botman->hears('Nyheder', SubscriptionController::class . '@checkBroadcastStatus');
