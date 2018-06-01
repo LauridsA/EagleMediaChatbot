@@ -41,7 +41,7 @@ class SubscriptionController extends Controller
     {
         try {
             $whatever = new FacebookSubscription();
-            $whatever->retrieveLabel($id);
+            return $whatever->retrieveLabel($id);
         }catch (Exception $ex) {
             Bugsnag::notifyException($ex);
         }

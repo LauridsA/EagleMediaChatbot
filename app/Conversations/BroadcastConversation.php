@@ -94,10 +94,10 @@ class BroadcastConversation extends Conversation
         $ctr = new SubscriptionController();
         $theid = (string)$this->bot->getUser()->getId();
         $subbed = $ctr->retrieveLabel($theid);
-            if ($subbed == 1) {
+            if ($subbed) {
                 $this->say('Du er sat op til at modtage beskeder herinde.');
                 $this->unSubToBroadcast(8);
-            } else if ($subbed == 0) {
+            } else if (!$subbed) {
                 $this->say('Du er sat op til ikke at modtage beskeder herinde.');
                 $this->subToBroadcast(9);
             } else {
