@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Conversations;
 
 use App\Http\Controllers\BotManController;
@@ -91,17 +92,17 @@ class BroadcastConversation extends Conversation
     public function checkBroadcastStatus()
     {
         $ctr = new SubscriptionController();
-        //$theid = (string)$this->bot->getUser()->getId();
-        $this->bot->reply('something');
-        //$subbed = $ctr->retrieveLabel($theid);
-        //$this->bot->reply($subbed);
-//            if ($subbed) {
-//                $this->say('Du er sat op til at modtage beskeder herinde.');
-//                $this->unSubToBroadcast(8);
-//            } else if (!$subbed) {
-//                $this->say('Du er sat op til ikke at modtage beskeder herinde.');
-//                $this->subToBroadcast(9);
-//            }
+        $theid = (string)$this->bot->getUser()->getId();
+        $subbed = $ctr->retrieveLabel($theid);
+            if ($subbed == 1) {
+                $this->say('Du er sat op til at modtage beskeder herinde.');
+                //$this->unSubToBroadcast(8);
+            } else if ($subbed == 0) {
+                $this->say('Du er sat op til ikke at modtage beskeder herinde.');
+                //$this->subToBroadcast(9);
+            } else {
+                $this->say('you broke it');
+            }
     }
 
     public function run()

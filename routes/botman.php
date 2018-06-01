@@ -14,4 +14,4 @@ $botman->hears('Hej', function ($bot) {
 $botman->hears('Kom i gang', BotManController::class . '@startConversation');
 $botman->hears('Get Started', BotManController::class . '@startConversation');
 $botman->hears('Start', BotManController::class . '@startConversation');
-$botman->hears('Nyheder', BotManController::class . '@checkBroadcastStatus');
+$botman->hears('Nyheder', SubscriptionController::class . '@checkBroadcastStatus');
