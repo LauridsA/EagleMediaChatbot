@@ -70,6 +70,7 @@ return [
     | Example items for your persistent Facebook menu.
     |
     */
+
     'persistent_menu' => [
         [
             'locale' => 'default',
@@ -82,12 +83,22 @@ return [
                         [
                             'title' => 'Tilmeld Nyhedsbrev (email)',
                             'type' => 'postback',
-                            'payload' => 'email',
+                            'payload' => 'EMAIL_PAYLOAD',
                         ],
                         [
                             'title' => 'Afmeld Nyhedsbrev (email)',
                             'type' => 'postback',
-                            'payload' => 'email',
+                            'payload' => 'EMAIL_PAYLOAD',
+                        ],
+                        [
+                            'title' => 'Tilmed opdateringer',
+                            'type' => 'postback',
+                            'payload' => 'UPDATES_PAYLOAD',
+                        ],
+                        [
+                            'title' => 'Afmeld opdateringer',
+                            'type' => 'postback',
+                            'payload' => 'UPDATES_PAYLOAD',
                         ],
                     ],
                 ],
