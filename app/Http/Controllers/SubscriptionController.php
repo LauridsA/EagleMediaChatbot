@@ -51,4 +51,8 @@ class SubscriptionController extends Controller
     public function checkBroadcastStatus(Botman $bot){
         $bot->startConversation(new BroadcastConversation());
     }
+
+    public function checkEmailStatus(Botman $bot){
+        $bot->startConversation(new SubscriptionConversation());
+    }
 }
