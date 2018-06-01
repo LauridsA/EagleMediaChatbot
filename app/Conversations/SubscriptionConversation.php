@@ -108,7 +108,7 @@ class SubscriptionConversation extends Conversation
         $ctr = new ClientController();
         $client = $ctr->checkSubscribed($id);
         if (!isset($client)){
-            $this->say('Din mail blev ikke fundet i vores database.');
+            $this->say('Din mail blev ikke fundet i vores database.'); // TODO seems to always be true, debug
             $this->subscriptionQuestion(5);
         } else if($client->subscribed == 'ok'){
             $this->say('Din mail er blevet fundet til at være'. $client->email. '. Du er sat til at få nyhedsbreve.');
