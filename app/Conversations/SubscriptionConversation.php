@@ -22,9 +22,11 @@ class SubscriptionConversation extends Conversation
         $buttonArray = [];
         $responseArray = [];
         $buttonValues = [];
+
         foreach ($buttons as $button) {
             $buttonArray[] = Button::create($button['name'])->value($button['value']);
         }
+
         foreach ($buttons as $button) {
             $buttonValues[] = [
                 'name' => $button['name'],
@@ -33,6 +35,7 @@ class SubscriptionConversation extends Conversation
                 'next_message_id' => $button['next_message_id']
             ];
         }
+
         foreach ($buttonValues as $button) {
             $responseArray[] =
                 [
@@ -58,9 +61,11 @@ class SubscriptionConversation extends Conversation
             $buttons = CustomButton::where('mid', $id)->get();
             $buttonArray = [];
             $buttonValues = [];
+
             foreach ($buttons as $button) {
                 $buttonArray[] = Button::create($button['name'])->value($button['value']);
             }
+
             foreach ($buttons as $button) {
                 $buttonValues[] = [
                     'name' => $button['name'],
@@ -77,7 +82,6 @@ class SubscriptionConversation extends Conversation
                     $ctr->startConversation($this->getBot());
                 } else {
                     if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
-
                         try {
                             $ctr = new ClientController();
                             $newClient = $ctr->saveNewClient($answer->getText(), $this->bot->getUser()->getFirstName() . '', $this->bot->getUser()->getLastName() . ''); // TODO $this->bot->getUser()->getFirstName(), $this->bot->getUser()->getLastName()
@@ -85,6 +89,7 @@ class SubscriptionConversation extends Conversation
                         } catch (Exception $ex) {
                             Bugsnag::notifyException($ex);
                         }
+
                         $ctr = new BotManController();
                         $ctr->startConversation($this->getBot());
                     } else {
@@ -168,3 +173,4 @@ class SubscriptionConversation extends Conversation
             Bugsnag::notifyException($ex);
         }
     }
+}

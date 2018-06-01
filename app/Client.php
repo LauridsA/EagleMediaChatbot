@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Client extends Model
 {
     protected $fillable = [
-        'name', 'email', 'subscription_key'
+        'name', 'email', 'subscribed', "facebook_id"
     ];
 }
