@@ -96,10 +96,10 @@ class BroadcastConversation extends Conversation
         $subbed = $ctr->retrieveLabel($theid);
             if ($subbed == 1) {
                 $this->say('Du er sat op til at modtage beskeder herinde.');
-                //$this->unSubToBroadcast(8);
+                $this->unSubToBroadcast(8);
             } else if ($subbed == 0) {
                 $this->say('Du er sat op til ikke at modtage beskeder herinde.');
-                //$this->subToBroadcast(9);
+                $this->subToBroadcast(9);
             } else {
                 $this->say('you broke it');
             }
