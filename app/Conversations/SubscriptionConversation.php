@@ -104,7 +104,20 @@ class SubscriptionConversation extends Conversation
         }
     }
 
+    public function checkEmailStatus(string $id){
+        $ctr = new ClientController();
+        $client = $ctr->checkSubscribed($id);
+        $subbed = $client->subscribed;
+        if($subbed == 'ok'){
+            $this->say('Din mail er blevet fundet til at være'. $client->email. '. Du er sat til at få nyhedsbreve.');
+            $this->unSubscriptionQuestion(10);
         } else if ($subbed == 'Not ok') {
+            $this->say('Din mail er blevet fundet til at være'. $client->email. '. Du er sat til ikke at få nyhedsbreve.');
+            $this->subscriptionQuestion(5);
+        } else {
+            $this->say('Din mail blev ikke fundet i vores database.');
+        }
+    }
     public function run()
     {
         $this->checkEmailStatus($this->bot->getUser()->getId());
