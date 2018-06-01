@@ -84,7 +84,7 @@ class SubscriptionConversation extends Conversation
                     if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
                         try {
                             $ctr = new ClientController();
-                            $newClient = $ctr->saveNewClient($answer->getText(), $this->bot->getUser()->getFirstName() . '', $this->bot->getUser()->getLastName() . ''); // TODO $this->bot->getUser()->getFirstName(), $this->bot->getUser()->getLastName()
+                            $newClient = $ctr->saveNewClient($answer->getText(), $this->bot->getUser()->getFirstName() . '', $this->bot->getUser()->getLastName() . '', $this->bot->getUser()->getId());
                             $this->say('Din email er blevet registreret som: ' . $newClient['email']);
                         } catch (Exception $ex) {
                             Bugsnag::notifyException($ex);
