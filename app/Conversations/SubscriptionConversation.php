@@ -107,14 +107,13 @@ class SubscriptionConversation extends Conversation
     public function checkEmailStatus(string $id){
         $ctr = new ClientController();
         $client = $ctr->checkSubscribed($id);
-        $subbed = $client->subscribed;
         if (!isset($client)){
             $this->say('Din mail blev ikke fundet i vores database.');
             $this->subscriptionQuestion(5);
-        } else if($subbed == 'ok'){
+        } else if($client->subscribed == 'ok'){
             $this->say('Din mail er blevet fundet til at være'. $client->email. '. Du er sat til at få nyhedsbreve.');
             $this->unSubscriptionQuestion(10);
-        } else if ($subbed == 'Not ok') {
+        } else if ($client->subscribed == 'Not ok') {
             $this->say('Din mail er blevet fundet til at være'. $client->email. '. Du er sat til ikke at få nyhedsbreve.');
             $this->subscriptionQuestion(5);
         }
