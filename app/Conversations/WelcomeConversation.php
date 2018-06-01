@@ -74,7 +74,7 @@ class WelcomeConversation extends Conversation
                         $this->makeQuestion(2);
                     } else {
                         $this->say('du skrev: ' . $answer->getText());
-                        $this->makeQuestion(2);
+                        //$this->makeQuestion(2); // TODO NLP?
                     }
                 }
             ];

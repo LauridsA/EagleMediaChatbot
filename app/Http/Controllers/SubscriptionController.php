@@ -16,20 +16,36 @@ class SubscriptionController extends Controller
 
     public function addUserToLabel($id)
     {
-        $whatever = new FacebookSubscription();
-        $whatever->addToLabel($id);
+        try {
+            $whatever = new FacebookSubscription();
+            $whatever->addToLabel($id);
+
+        } catch (Exception $ex) {
+            Bugsnag::notifyException($ex);
+        }
     }
 
     public function removeUserFromLabel($id)
     {
-        $whatever = new FacebookSubscription();
-        $whatever->removeFromLabel($id);
+        try {
+            $whatever = new FacebookSubscription();
+            $whatever->removeFromLabel($id);
+        }catch (Exception $ex) {
+            Bugsnag::notifyException($ex);
+        }
+
+
     }
 
     public function retrieveLabel($id)
     {
-        $whatever = new FacebookSubscription();
-        $whatever->retrieveLabel($id);
+        try {
+            $whatever = new FacebookSubscription();
+            $whatever->retrieveLabel($id);
+        }catch (Exception $ex) {
+            Bugsnag::notifyException($ex);
+        }
+
     }
 
     public function checkBroadcastStatus(Botman $bot){
