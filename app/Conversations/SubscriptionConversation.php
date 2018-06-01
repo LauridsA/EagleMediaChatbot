@@ -41,7 +41,6 @@ class SubscriptionConversation extends Conversation
                         if ($button['value'] == 'subByEmail') {
                             $this->subscription($button['next_message_id']);
                         } else if ($button['value'] == 'cancel') {
-                            $this->say('fag');
                             $ctr = new BotManController();
                             $ctr->startConversation($this->getBot());
                         }
@@ -100,13 +99,72 @@ class SubscriptionConversation extends Conversation
         }
     }
 
+    public function checkEmailStatus(string $id){
+        $ctr = new ClientController();
+        $client = $ctr->checkSubscribed($id);
+        $subbed = $client->subscribed;
+        if($subbed == 'ok'){
+            $this->say('Din mail er blevet fundet til at være'. $client->email. '. Du er sat til at få nyhedsbreve.');
+            $this->unSubscriptionQuestion(10);
+        } else if ($subbed == 'Not ok') {
+            $this->say('Din mail er blevet fundet til at være'. $client->email. '. Du er sat til ikke at få nyhedsbreve.');
+            $this->subscriptionQuestion(5);
+        } else {
+            $this->say('Din mail blev ikke fundet i vores database.');
+        }
+    }
+
 
     /**
      * @return mixed
      */
     public function run()
     {
-        $this->subscriptionQuestion(5);
+        $this->checkEmailStatus($this->bot->getUser()->getId());
         // $this->IsThisYourMail(6) // TODO email suggestion with button
     }
-}
+
+    public function unSubscriptionQuestion($id)
+    {
+        try {
+            $message = Message::find($id);
+            $buttons = CustomButton::where('mid', $id)->get();
+            $buttonArray = [];
+            $buttonValues = [];
+            foreach ($buttons as $button) {
+                $buttonArray[] = Button::create($button['name'])->value($button['value']);
+            }
+            foreach ($buttons as $button) {
+                $buttonValues[] = [
+                    'name' => $button['name'],
+                    'value' => $button['value'],
+                    'mid' => $button['mid'],
+                    'next_message_id' => $button['next_message_id']
+                ];
+            }
+
+            $question = Question::create($message['message'])->addButtons($buttonArray);
+            $this->ask($question, function (Answer $answer) use ($buttonValues) {
+                if ($answer->getValue() == 'cancel') {
+                    $ctr = new BotManController();
+                    $ctr->startConversation($this->getBot());
+                } else {
+                    if ($answer->getValue() == 'unsub') {
+                        try {
+                            $ctr = new ClientController();
+                            $ctr->unsubscribe($this->bot->getUser()->getId());
+                            $this->say('Du er blevet afmeldt nyhedsbrevet!');
+                        } catch (Exception $ex) {
+                            Bugsnag::notifyException($ex);
+                        }
+                        $ctr = new BotManController();
+                        $ctr->startConversation($this->getBot());
+                    }
+
+                }
+
+            });
+        } catch (Exception $ex) {
+            Bugsnag::notifyException($ex);
+        }
+    }
