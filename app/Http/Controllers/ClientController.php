@@ -27,8 +27,15 @@ class ClientController extends Controller
         $client->save();
     }
 
+    /**
+     * Checks if the provided id matches any in the database. Used to check whether or not a facebook
+     *
+     * @param String $id
+     * @return mixed
+     */
     public function checkSubscribed(String $id) {
-        $client = App\Client::find($id);
+//        $client = App\Client::find($id);
+        $client = App\Client::where("facebook_id", $id)->first();
         return $client;
     }
 }
