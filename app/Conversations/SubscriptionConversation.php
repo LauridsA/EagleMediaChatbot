@@ -121,16 +121,16 @@ class SubscriptionConversation extends Conversation
         try {
             $ctr = new ClientController();
             $client = $ctr->checkSubscribed($id);
-            $clientEmail = $client->email;
+//            $clientEmail = $client->email;
             // debugging output...
-            $this->say("checking email status for user " . $client->facebook_id . "...");
+            $this->say("checking email status for user " . $this->getBot()->getUser()->getId() . "...");
 
-            if (!isset($client) || $clientEmail == "") {
+            if (!isset($client) || $client->email == "") {
                 $this->say("Din email blev ikke fundet i vores database.");
                 $this->subscriptionQuestion(5);
             } else if ($client->subscribed) {
 //            $this->say('Din mail er blevet fundet til at være ' . $client->email . '. Du er sat til at få nyhedsbreve.');
-                $this->say("Du modtager nyhedsbreve på $clientEmail.");
+                $this->say("Du modtager nyhedsbreve på " . $client->email);
                 $this->unSubscriptionQuestion(10);
             } else if (!$client->subscribed) {
 //            $this->say('Din mail er blevet fundet til at være ' . $client->email . '. Du er sat til ikke at få nyhedsbreve.');
