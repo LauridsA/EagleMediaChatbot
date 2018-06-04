@@ -111,6 +111,15 @@ class SubscriptionConversation extends Conversation
     }
 
     /**
+     * Start the subscription conversation.
+     */
+    public function run()
+    {
+        $this->checkEmailStatus($this->bot->getUser()->getId());
+        // $this->IsThisYourMail(6) // TODO email suggestion with button
+    }
+
+    /**
      * Checks whether a facebook user is subscribed to receive emails or not. Sends a reply to notify the user of
      * the email status, then proceeds to the subscription conversation.
      *
@@ -183,14 +192,5 @@ class SubscriptionConversation extends Conversation
         } catch (Exception $ex) {
             Bugsnag::notifyException($ex);
         }
-    }
-
-    /**
-     * Start the subscription conversation.
-     */
-    public function run()
-    {
-        $this->checkEmailStatus($this->bot->getUser()->getId());
-        // $this->IsThisYourMail(6) // TODO email suggestion with button
     }
 }
