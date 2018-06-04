@@ -27,15 +27,6 @@ class ClientController extends Controller
         ]);
     }
 
-    // TODO: Interest subject needs work
-//    public function saveNewInterest($interest, $user_id)
-//    {
-//        return $result = App\User_Interest::create(['interest_id' => $interest, 'user_id' => $user_id]);
-//        $user = User::firstOrNew(array('name' => Input::get('name')));
-//        $user->foo = Input::get('foo');
-//        $user->save();
-//    }
-
     /**
      * Unsubscribe a facebook user from email service, deleting the stored email.
      *
@@ -50,8 +41,8 @@ class ClientController extends Controller
     }
 
     /**
-     * Checks if the provided id matches any in the database. Used to check whether or not a
-     * facebook account is subbed or not.
+     * Checks if the provided id matches any in the database. Used to check whether a
+     * facebook account is subscribed.
      *
      * @param String $id facebook_id to match
      * @return mixed matching client

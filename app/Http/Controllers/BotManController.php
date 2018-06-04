@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Conversations\WelcomeConversation;
 use BotMan\BotMan\BotMan;
-use Illuminate\Http\Request;
 use App\Conversations\EntrypointBot;
 
 class BotManController extends Controller

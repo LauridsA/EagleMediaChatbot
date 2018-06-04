@@ -11,7 +11,11 @@ class SubscriptionController extends Controller
 {
     public function startSubscriptionConversation(Botman $bot)
     {
-        $bot->startConversation(new SubscriptionConversation());
+        try {
+            $bot->startConversation(new SubscriptionConversation());
+        } catch (Exception $ex) {
+            Bugsnag::notifyException($ex);
+        }
     }
 
     public function addUserToLabel($id)
@@ -30,11 +34,9 @@ class SubscriptionController extends Controller
         try {
             $whatever = new FacebookSubscription();
             $whatever->removeFromLabel($id);
-        }catch (Exception $ex) {
+        } catch (Exception $ex) {
             Bugsnag::notifyException($ex);
         }
-
-
     }
 
     public function retrieveLabel($id)
@@ -42,17 +44,27 @@ class SubscriptionController extends Controller
         try {
             $whatever = new FacebookSubscription();
             return $whatever->retrieveLabel($id);
-        }catch (Exception $ex) {
+        } catch (Exception $ex) {
             Bugsnag::notifyException($ex);
         }
 
     }
 
-    public function checkBroadcastStatus(Botman $bot){
-        $bot->startConversation(new BroadcastConversation());
+    public function checkBroadcastStatus(Botman $bot)
+    {
+        try {
+            $bot->startConversation(new BroadcastConversation());
+        } catch (Exception $ex) {
+            Bugsnag::notifyException($ex);
+        }
     }
 
-    public function checkEmailStatus(Botman $bot){
-        $bot->startConversation(new SubscriptionConversation());
+    public function checkEmailStatus(Botman $bot)
+    {
+        try {
+            $bot->startConversation(new SubscriptionConversation());
+        } catch (Exception $ex) {
+            Bugsnag::notifyException($ex);
+        }
     }
 }
