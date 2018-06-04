@@ -10,48 +10,51 @@ use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use App\Message;
 use App\CustomButton;
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 
 class SubscriptionConversation extends Conversation
 {
-
-
     public function subscriptionQuestion($id)
     {
-        $message = Message::find($id);
-        $buttons = CustomButton::where('mid', $id)->get();
-        $buttonArray = [];
-        $responseArray = [];
-        $buttonValues = [];
+        try {
+            $message = Message::find($id);
+            $buttons = CustomButton::where('mid', $id)->get();
+            $buttonArray = [];
+            $responseArray = [];
+            $buttonValues = [];
 
-        foreach ($buttons as $button) {
-            $buttonArray[] = Button::create($button['name'])->value($button['value']);
-        }
+            foreach ($buttons as $button) {
+                $buttonArray[] = Button::create($button['name'])->value($button['value']);
+            }
 
-        foreach ($buttons as $button) {
-            $buttonValues[] = [
-                'name' => $button['name'],
-                'value' => $button['value'],
-                'mid' => $button['mid'],
-                'next_message_id' => $button['next_message_id']
-            ];
-        }
-
-        foreach ($buttonValues as $button) {
-            $responseArray[] =
-                [
-                    'pattern' => $button['value'],
-                    'callback' => function () use ($button) {
-                        if ($button['value'] == 'subByEmail') {
-                            $this->subscription($button['next_message_id']);
-                        } else if ($button['value'] == 'cancel') {
-                            $ctr = new BotManController();
-                            $ctr->startConversation($this->getBot());
-                        }
-                    }
+            foreach ($buttons as $button) {
+                $buttonValues[] = [
+                    'name' => $button['name'],
+                    'value' => $button['value'],
+                    'mid' => $button['mid'],
+                    'next_message_id' => $button['next_message_id']
                 ];
+            }
+
+            foreach ($buttonValues as $button) {
+                $responseArray[] =
+                    [
+                        'pattern' => $button['value'],
+                        'callback' => function () use ($button) {
+                            if ($button['value'] == 'subByEmail') {
+                                $this->subscription($button['next_message_id']);
+                            } else if ($button['value'] == 'cancel') {
+                                $ctr = new BotManController();
+                                $ctr->startConversation($this->getBot());
+                            }
+                        }
+                    ];
+            }
+            $question = Question::create($message['message'])->addButtons($buttonArray);
+            $this->ask($question, $responseArray);
+        } catch (Exception $ex) {
+            Bugsnag::notifyException($ex);
         }
-        $question = Question::create($message['message'])->addButtons($buttonArray);
-        $this->ask($question, $responseArray);
     }
 
     public function subscription($id)
@@ -115,21 +118,25 @@ class SubscriptionConversation extends Conversation
      */
     public function checkEmailStatus(string $id)
     {
-        $ctr = new ClientController();
-        $client = $ctr->checkSubscribed($id);
-        $clientEmail = $client->email;
+        try {
+            $ctr = new ClientController();
+            $client = $ctr->checkSubscribed($id);
+            $clientEmail = $client->email;
 
-        if (!isset($client) || $clientEmail == "") {
-            $this->say("Din mail blev ikke fundet i vores database.");
-            $this->subscriptionQuestion(5);
-        } else if ($client->subscribed) {
+            if (!isset($client) || $clientEmail == "") {
+                $this->say("Din mail blev ikke fundet i vores database.");
+                $this->subscriptionQuestion(5);
+            } else if ($client->subscribed) {
 //            $this->say('Din mail er blevet fundet til at være ' . $client->email . '. Du er sat til at få nyhedsbreve.');
-            $this->say("Du modtager på nyhedsbreve på $clientEmail");
-            $this->unSubscriptionQuestion(10);
-        } else if (!$client->subscribed) {
+                $this->say("Du modtager på nyhedsbreve på $clientEmail");
+                $this->unSubscriptionQuestion(10);
+            } else if (!$client->subscribed) {
 //            $this->say('Din mail er blevet fundet til at være ' . $client->email . '. Du er sat til ikke at få nyhedsbreve.');
-            $this->say("Du er ikke sat til at modtage nyhedsbreve via email.");
-            $this->subscriptionQuestion(5);
+                $this->say("Du er ikke sat til at modtage nyhedsbreve via email.");
+                $this->subscriptionQuestion(5);
+            }
+        } catch (Exception $ex) {
+            Bugsnag::notifyException($ex);
         }
     }
 
