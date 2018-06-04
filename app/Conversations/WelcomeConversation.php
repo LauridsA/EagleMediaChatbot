@@ -19,7 +19,7 @@ class WelcomeConversation extends Conversation
      *
      * @param $id message to load from the database
      */
-    public function makeQuestion($id)
+    public function makeQuestion($id) // TODO: fix bug where you have to write twice to get to ex. email sub convo
     {
         if ($id === 5) {
             $ctr = new SubscriptionController();

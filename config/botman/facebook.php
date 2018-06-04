@@ -104,8 +104,8 @@ return [
                 ],
                 [
                     'type' => 'web_url',
-                    'title' => 'Indstillinger',
-                    'url' => 'http://botman.io',
+                    'title' => 'Website',
+                    'url' => 'http://eaglemedia.dk',
                     'webview_height_ratio' => 'full',
                 ],
             ],
