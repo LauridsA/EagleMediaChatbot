@@ -118,12 +118,12 @@ class SubscriptionConversation extends Conversation
      */
     public function checkEmailStatus(string $id)
     {
-        // debugging output...
-        $this->say("checking email status for user ". $this->bot->getUser()->getId() ."...");
         try {
             $ctr = new ClientController();
             $client = $ctr->checkSubscribed($id);
             $clientEmail = $client->email;
+            // debugging output...
+            $this->say("checking email status for user " . $client->facebook_id . "...");
 
             if (!isset($client) || $clientEmail == "") {
                 $this->say("Din email blev ikke fundet i vores database.");
