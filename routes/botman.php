@@ -14,4 +14,4 @@ $botman->hears('GET_STARTED_PAYLOAD', BotManController::class . '@startConversat
 $botman->hears('Start', BotManController::class . '@startConversation');
 $botman->hears('Nyheder', SubscriptionController::class . '@checkBroadcastStatus');
 $botman->hears('UPDATES_PAYLOAD', SubscriptionController::class . '@checkBroadcastStatus');
-$botman->hears('EMAIL_PAYLOAD', SubscriptionController::class . '@checkBroadcastStatus');
+$botman->hears('EMAIL_PAYLOAD', SubscriptionController::class . '@checkEmailStatus');

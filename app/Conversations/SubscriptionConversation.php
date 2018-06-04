@@ -121,19 +121,14 @@ class SubscriptionConversation extends Conversation
         try {
             $ctr = new ClientController();
             $client = $ctr->checkSubscribed($id);
-//            $clientEmail = $client->email;
-            // debugging output...
-            $this->say("checking email status for user " . $this->getBot()->getUser()->getId() . "...");
 
             if (!isset($client) || $client->email == "") {
                 $this->say("Din email blev ikke fundet i vores database.");
                 $this->subscriptionQuestion(5);
             } else if ($client->subscribed) {
-//            $this->say('Din mail er blevet fundet til at være ' . $client->email . '. Du er sat til at få nyhedsbreve.');
                 $this->say("Du modtager nyhedsbreve på " . $client->email);
                 $this->unSubscriptionQuestion(10);
             } else if (!$client->subscribed) {
-//            $this->say('Din mail er blevet fundet til at være ' . $client->email . '. Du er sat til ikke at få nyhedsbreve.');
                 $this->say("Du er ikke sat til at modtage nyhedsbreve via email.");
                 $this->subscriptionQuestion(5);
             }
