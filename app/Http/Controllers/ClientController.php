@@ -2,38 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App;
 
 class ClientController extends Controller
 {
+
+    /**
+     * Saves a new account to the database if they wish to sign up for any subscription.
+     *
+     * @param String $email
+     * @param String $firstname
+     * @param String $lastname
+     * @param String $fb_id
+     * @return mixed
+     */
     public function saveNewClient(String $email, String $firstname, String $lastname, String $fb_id)
     {
-        // save new client to db and return it to caller. Needs all fillable fields set it seems.
         // TODO check if exists
-        return $client = App\Client::create(['email'=>$email, 'subscribed'=>'ok', 'name'=>$firstname.' '.$lastname, 'facebook_id'=>$fb_id]);
+        return $client = App\Client::create([
+            'email' => $email,
+            'subscribed' => 'ok',
+            'name' => $firstname . ' ' . $lastname,
+            'facebook_id' => $fb_id
+        ]);
     }
 
-    public function saveNewInterest($interest, $user_id) {
-        return $result = App\User_Interest::create(['interest_id' => $interest, 'user_id' => $user_id]);
-//        $user = User::firstOrNew(array('name' => Input::get('name'))); TODO check if exists
+    // TODO: Interest subject needs work
+//    public function saveNewInterest($interest, $user_id)
+//    {
+//        return $result = App\User_Interest::create(['interest_id' => $interest, 'user_id' => $user_id]);
+//        $user = User::firstOrNew(array('name' => Input::get('name')));
 //        $user->foo = Input::get('foo');
 //        $user->save();
-    }
+//    }
 
-    public function unsubscribe(String $id){
-        $client = App\Client::find($id);
+    public function unsubscribe(String $id)
+    {
+        $client = App\Client::where("facebook_id", $id)->first();
         $client->subscribed = 'Not ok';
         $client->save();
     }
 
     /**
-     * Checks if the provided id matches any in the database. Used to check whether or not a facebook
+     * Checks if the provided id matches any in the database. Used to check whether or not a
+     * facebook account is subbed or not.
      *
-     * @param String $id
-     * @return mixed
+     * @param String $id facebook_id to match
+     * @return mixed matching client
      */
-    public function checkSubscribed(String $id) {
+    public function checkSubscribed(String $id)
+    {
 //        $client = App\Client::find($id);
         $client = App\Client::where("facebook_id", $id)->first();
         return $client;
