@@ -84,7 +84,11 @@ class SubscriptionConversation extends Conversation
                     if (filter_var($answer->getText(), FILTER_VALIDATE_EMAIL)) {
                         try {
                             $ctr = new ClientController();
-                            $newClient = $ctr->saveNewClient($answer->getText(), $this->bot->getUser()->getFirstName() . '', $this->bot->getUser()->getLastName() . '', $this->bot->getUser()->getId());
+                            $newClient = $ctr->saveNewClient($answer->getText(),
+                                $this->bot->getUser()->getFirstName() . '',
+                                $this->bot->getUser()->getLastName() . '',
+                                $this->bot->getUser()->getId()
+                            );
                             $this->say('Din email er blevet registreret som: ' . $newClient['email']);
                         } catch (Exception $ex) {
                             Bugsnag::notifyException($ex);
@@ -98,30 +102,35 @@ class SubscriptionConversation extends Conversation
                     }
                 }
             });
-
         } catch (Exception $ex) {
             Bugsnag::notifyException($ex);
         }
     }
 
-    public function checkEmailStatus(string $id){
+    /**
+     * Checks whether a facebook user is subscribed to receive emails or not. Sends a reply to notify the user of
+     * the email status, then proceeds to the subscription conversation.
+     *
+     * @param string $id PSID
+     */
+    public function checkEmailStatus(string $id)
+    {
         $ctr = new ClientController();
         $client = $ctr->checkSubscribed($id);
-        if (!isset($client)){
-            $this->say('Din mail blev ikke fundet i vores database.'); // TODO seems to always be true, debug
+        $clientEmail = $client->email;
+
+        if (!isset($client) || $clientEmail == "") {
+            $this->say("Din mail blev ikke fundet i vores database.");
             $this->subscriptionQuestion(5);
-        } else if($client->subscribed == 'ok'){
-            $this->say('Din mail er blevet fundet til at være'. $client->email. '. Du er sat til at få nyhedsbreve.');
+        } else if ($client->subscribed) {
+//            $this->say('Din mail er blevet fundet til at være ' . $client->email . '. Du er sat til at få nyhedsbreve.');
+            $this->say("Du modtager på nyhedsbreve på $clientEmail");
             $this->unSubscriptionQuestion(10);
-        } else if ($client->subscribed == 'Not ok') {
-            $this->say('Din mail er blevet fundet til at være'. $client->email. '. Du er sat til ikke at få nyhedsbreve.');
+        } else if (!$client->subscribed) {
+//            $this->say('Din mail er blevet fundet til at være ' . $client->email . '. Du er sat til ikke at få nyhedsbreve.');
+            $this->say("Du er ikke sat til at modtage nyhedsbreve via email.");
             $this->subscriptionQuestion(5);
         }
-    }
-    public function run()
-    {
-        $this->checkEmailStatus($this->bot->getUser()->getId());
-        // $this->IsThisYourMail(6) // TODO email suggestion with button
     }
 
     public function unSubscriptionQuestion($id)
@@ -167,5 +176,14 @@ class SubscriptionConversation extends Conversation
         } catch (Exception $ex) {
             Bugsnag::notifyException($ex);
         }
+    }
+
+    /**
+     * Start the subscription conversation.
+     */
+    public function run()
+    {
+        $this->checkEmailStatus($this->bot->getUser()->getId());
+        // $this->IsThisYourMail(6) // TODO email suggestion with button
     }
 }

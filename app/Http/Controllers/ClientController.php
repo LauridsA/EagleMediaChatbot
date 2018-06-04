@@ -21,7 +21,7 @@ class ClientController extends Controller
         // TODO check if exists
         return $client = App\Client::create([
             'email' => $email,
-            'subscribed' => 'ok',
+            'subscribed' => True,
             'name' => $firstname . ' ' . $lastname,
             'facebook_id' => $fb_id
         ]);
@@ -36,10 +36,16 @@ class ClientController extends Controller
 //        $user->save();
 //    }
 
+    /**
+     * Unsubscribe a facebook user from email service, deleting the stored email.
+     *
+     * @param String $id
+     */
     public function unsubscribe(String $id)
     {
         $client = App\Client::where("facebook_id", $id)->first();
-        $client->subscribed = 'Not ok';
+        $client->email = "";
+        $client->subscribed = False;
         $client->save();
     }
 
@@ -52,7 +58,6 @@ class ClientController extends Controller
      */
     public function checkSubscribed(String $id)
     {
-//        $client = App\Client::find($id);
         $client = App\Client::where("facebook_id", $id)->first();
         return $client;
     }

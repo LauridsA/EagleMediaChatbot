@@ -17,7 +17,7 @@ class CreateClientsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('subscribed');
+            $table->boolean('subscribed');
             $table->string('facebook_id');
             $table->timestamps();
         });
