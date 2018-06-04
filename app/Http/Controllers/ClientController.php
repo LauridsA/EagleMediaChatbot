@@ -18,10 +18,10 @@ class ClientController extends Controller
      */
     public function saveNewClient(String $email, String $firstname, String $lastname, String $fb_id)
     {
-        // TODO check if exists
         $toSave = App\Client::where("facebook_id", $fb_id)->first();
         if ($toSave) {
             $toSave->email = $email;
+            $toSave->subscribed = True;
             $toSave->save();
             return $toSave;
         } else {
