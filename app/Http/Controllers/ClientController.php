@@ -8,7 +8,7 @@ class ClientController extends Controller
 {
 
     /**
-     * Saves a new account to the database if they wish to sign up for any subscription.
+     * Upserts an account to the database if they wish to sign up for any subscription.
      *
      * @param String $email
      * @param String $firstname
@@ -19,12 +19,20 @@ class ClientController extends Controller
     public function saveNewClient(String $email, String $firstname, String $lastname, String $fb_id)
     {
         // TODO check if exists
-        return $client = App\Client::create([
-            'email' => $email,
-            'subscribed' => True,
-            'name' => $firstname . ' ' . $lastname,
-            'facebook_id' => $fb_id
-        ]);
+        $toSave = App\Client::where("email", $email)->first();
+        if ($toSave) {
+            $toSave->email = $email;
+            $toSave->save();
+            return $toSave;
+        } else {
+            return $client = App\Client::create([
+                'email' => $email,
+                'subscribed' => True,
+                'name' => $firstname . ' ' . $lastname,
+                'facebook_id' => $fb_id
+            ]);
+        }
+
     }
 
     /**
