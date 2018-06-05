@@ -70,17 +70,12 @@ class WelcomeConversation extends Conversation
                 'pattern' => '.*',
                 'callback' => function (Answer $answer) {
 
-                    $this->say("brug knapperne...");
-                    $this->makeQuestion(2);
-//                    if ($answer->getValue() == "EMAIL_PAYLOAD") {
-////                        SubscriptionController::class . "@checkEmailStatus";
-//                        $ctr = new SubscriptionController();
-//                        $ctr->checkEmailStatus($this->getBot());
-//                    } else {
-//                        $this->say('Brug knapperne');
-//                        $this->bot->typesAndWaits(2);
-//                        $this->makeQuestion(2);
-//                    }
+                    if (trim($answer->getText()) == '') {
+                        $this->say('skriv noget din nar');
+                        $this->makeQuestion(2);
+                    } else {
+                        $this->say('du skrev: ' . $answer->getText());
+                    }
                 }
             ];
 
