@@ -188,6 +188,5 @@ class SubscriptionConversation extends Conversation
     public function run()
     {
         $this->checkEmailStatus($this->bot->getUser()->getId());
-        // $this->IsThisYourMail(6) // TODO email suggestion with button
     }
 }
