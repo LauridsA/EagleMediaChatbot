@@ -68,15 +68,18 @@ class WelcomeConversation extends Conversation
             $responseArray[] = [
                 'pattern' => '.*',
                 'callback' => function (Answer $answer) {
-                    if ($answer->getValue() == "EMAIL_PAYLOAD") {
-//                        SubscriptionController::class . "@checkEmailStatus";
-                        $ctr = new SubscriptionController();
-                        $ctr->checkEmailStatus($this->getBot());
-                    } else {
-                        $this->say('Brug knapperne');
-                        $this->bot->typesAndWaits(2);
-                        $this->makeQuestion(2);
-                    }
+
+                    $this->say("brug knapperne...");
+                    $this->makeQuestion(2);
+//                    if ($answer->getValue() == "EMAIL_PAYLOAD") {
+////                        SubscriptionController::class . "@checkEmailStatus";
+//                        $ctr = new SubscriptionController();
+//                        $ctr->checkEmailStatus($this->getBot());
+//                    } else {
+//                        $this->say('Brug knapperne');
+//                        $this->bot->typesAndWaits(2);
+//                        $this->makeQuestion(2);
+//                    }
                 }
             ];
 
