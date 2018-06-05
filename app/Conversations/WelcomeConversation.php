@@ -2,9 +2,7 @@
 
 namespace App\Conversations;
 
-use App\Http\Controllers\ClientController;
 use App\Http\Controllers\SubscriptionController;
-use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Conversations\Conversation;
@@ -19,12 +17,12 @@ class WelcomeConversation extends Conversation
      *
      * @param $id message to load from the database
      */
-    public function makeQuestion($id) // TODO: fix bug where you have to write twice to get to ex. email sub convo
+    public function makeQuestion($id) // TODO fix bug where you have to write twice to get to ex. email sub convo
     {
+        // If message is start of sub, else run normal builder
         if ($id === 5) {
             $ctr = new SubscriptionController();
             $ctr->startSubscriptionConversation($this->getBot());
-
         } else {
             $message = Message::find($id);
             $buttons = CustomButton::where('mid', $id)->get();
@@ -49,7 +47,7 @@ class WelcomeConversation extends Conversation
                 ];
             }
 
-            // TODO: Non-button answers should elicit an error, but keep asking for a response.
+            // TODO Non-button answers should elicit an error, but keep asking for a response.
             // Fill the response array using button data
             foreach ($buttonValues as $button) {
                 $responseArray[] =
@@ -65,16 +63,17 @@ class WelcomeConversation extends Conversation
                     ];
             }
 
+            // TODO add NLP functionality
             // Append responseArray to catch non-button messaging
             $responseArray[] = [
                 'pattern' => '.*',
                 'callback' => function (Answer $answer) {
-                    if (trim($answer->getText()) == '') {
-                        $this->say('skriv noget din nar');
-                        $this->makeQuestion(2);
+                    if ($answer->getValue() == "EMAIL_PAYLOAD") {
+                        SubscriptionController::class . "@checkEmailStatus";
                     } else {
-                        $this->say('du skrev: ' . $answer->getText());
-                        //$this->makeQuestion(2); // TODO NLP?
+                        $this->say('Brug knapperne');
+                        $this->bot->typesAndWaits(2);
+                        $this->makeQuestion(2);
                     }
                 }
             ];
@@ -83,18 +82,6 @@ class WelcomeConversation extends Conversation
             $question = Question::create($message['message'])->addButtons($buttonArray);
             $this->ask($question, $responseArray);
         }
-    }
-
-    /**
-     * Used to log a users traversal of the bot and save subjects of potential interests
-     *
-     * @param $interest
-     * @param $user_id
-     */
-    public function logInterest($interest, $user_id)
-    {
-        $ctr = new ClientController();
-        $ctr->saveNewInterest($interest, $user_id);
     }
 
     /**
