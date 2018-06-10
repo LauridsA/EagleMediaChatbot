@@ -38,10 +38,36 @@ class ConversationBuilder
         $result = $ctr->getButtonData($mid);
         return $result;
     }
+
+    public function deleteButton()
+    {
+
+    }
+
+    public function deleteMessage()
+    {
+
+    }
 }
 $CB = new ConversationBuilder();
 $MessageIDs = $CB->getData();
 $AllMessages = $CB->getAllData();
+if (isset($_POST["submit"])){
+    $QuestionText = $_POST['QuestionText'];
+    $Delay = $_POST['Delay'];
+    if (!$_POST['QuestionText']){
+        $errorText = "Enter a text!";
+    }
+    if ($_POST['Delay']){
+        $errorDelay = "Enter a delay-time!";
+    }
+    if (!$errorDelay && !$errorText){
+        $resultSubmit =  '<div class="alert alert-success">Thank You! I will be in touch</div>';
+    } else {
+        $resultSubmit = '<div class="alert alert-danger">Sorry there was an error sending your message. Please try again later</div>';
+    }
+}
+
 ?>
 
 <html lang="en">
@@ -57,7 +83,7 @@ $AllMessages = $CB->getAllData();
 
 <div class="alert-div" style="width: 250px; position: fixed; height: 50px; left: 250px; top: 70px;">
 
-    <form>
+    <form role="form" >
         <!--
         <div class="alert alert-danger" role="alert">
             Message IDs 5, 6, 7, 8 9 and 10 are reserved
@@ -66,15 +92,17 @@ $AllMessages = $CB->getAllData();
         <div class="form-group">
             <label for="QuestionText">Question Text</label>
             <input type="text" class="form-control" id="QuestionText" aria-describedby="emailHelp" placeholder="Question / message...">
+            <?php //echo "<p class='text-danger'>$errorText</p>";?>
         </div>
         <div class="form-group">
             <label for="Delay">Delay</label>
             <input type="text" class="form-control" id="Delay" aria-describedby="emailHelp" placeholder="Seconds before displaying...">
+            <?php //echo "<p class='text-danger'>$errorDelay</p>";?>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <div class="alert-div2" style="width: 250px; position: fixed; height: 50px; left: 650px; top: 70px;">
-        <form>
+        <form onsubmit="submitMessagejs()"> // TODO fix here
             <div class="form-group">
                 <label for="ButtonID">Button ID</label>
                 <input type="text" class="form-control" id="ButtonID" aria-describedby="emailHelp" placeholder="ID...">
@@ -108,7 +136,7 @@ $AllMessages = $CB->getAllData();
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
-    <div class="MessagesList" style="width: 600px; position: fixed; height: 500px; left: 1100px; top: 70px; overflow-y: scroll">
+    <div class="MessagesList" style="width: 700px; position: fixed; height: 800px; left: 1100px; top: 70px; overflow-y: scroll">
         <?php foreach ($AllMessages as $message): ?>
         <div class="card">
             <div class="card-body">
@@ -119,17 +147,25 @@ $AllMessages = $CB->getAllData();
                 <?php $ctr = new ConversationBuilder();
                 $attachedButtons = $ctr->getButtonData($message['id']);
                 foreach ($attachedButtons as $button): ?>
-                <li class="list-group-item"> Button ID: <b><?php echo $button['id']; ?></b>, Button text: <b><?php echo $button['name']; ?></b>, next message ID: <b><?php echo $button['next_message_id']; ?></b></li>
+                <li class="list-group-item"> Button ID: <b><?php echo $button['id']; ?></b>, Button text: <b><?php echo $button['name']; ?></b>, next message ID: <b><?php echo $button['next_message_id']; ?></b><button style="float: right" type="button" class="btn btn-danger">Delete</button><button style="float: right" type="button" class="btn btn-info">Edit</button></li>
                 <?php endforeach; ?>
             </ul>
         </div>
         <?php endforeach; ?>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $("form").submit(function () {
+            alert("submitted");
+        })
+    });
+</script>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </body>
 
 </html>
