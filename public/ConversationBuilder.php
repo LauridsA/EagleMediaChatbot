@@ -10,17 +10,24 @@ class ConversationBuilder
 {
     public function getData()
     {
-        // TODO call ORM to get the data
-        return 1;
+        $ctr = new App\Http\Controllers\MAndBController();
+        $result = $ctr->getMessagesData();
+
+        return $result;
+    }
+
+    public function submitMessage()
+    {
+        // TODO call ORM
+    }
+
+    public function submitButton()
+    {
+        // TODO call ORM
     }
 }
-$MessageIDs = array(
-    1 => 1,
-    2 => 2,
-    3 => 3,
-    4 => 4,
-    5 => 5,
-);
+$CB = new ConversationBuilder();
+$MessageIDs = $CB->getData();
 ?>
 <html lang="en">
     <head>
