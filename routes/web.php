@@ -14,6 +14,8 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('/CB', function () {
+   return view('ConversationBuilder');
+});
 Route::match(['get', 'post'], '/botman', 'BotManController@handle');
 Route::get('/botman/tinker', 'BotManController@tinker');

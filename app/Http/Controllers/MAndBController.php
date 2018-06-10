@@ -9,13 +9,19 @@ class MAndBController extends Controller
 {
     public function getMessagesData()
     {
-        $messages = App\Client::all();
+        $messages = App\Message::all('id');
         return $messages;
     }
 
-    public function getButtonData()
+    public function getMessagesAllData()
     {
-        $buttons = App\CustomButton::all();
+        $messages = App\Message::all();
+        return $messages;
+    }
+
+    public function getButtonData(String $mid)
+    {
+        $buttons = App\CustomButton::where('mid', $mid)->get();
         return $buttons;
     }
 
