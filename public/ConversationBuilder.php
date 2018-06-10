@@ -8,12 +8,19 @@
 
 class ConversationBuilder
 {
-    private function getData()
+    public function getData()
     {
-
+        // TODO call ORM to get the data
         return 1;
     }
 }
+$MessageIDs = array(
+        1 => 1,
+        2 => 2,
+        3 => 3,
+        4 => 4,
+        5 => 5,
+);
 ?>
 
 <html lang="en">
@@ -67,13 +74,12 @@ class ConversationBuilder
                     </small>
                 </div>
                 <div class="form-group">
-                    <label for="exampleFormControlSelect1">Example select</label>
-                    <select class="form-control" id="exampleFormControlSelect1">
+                    <label for="MID">Select Message</label>
+                    <select class="form-control" id="MID">
                         <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                        <? foreach ($MessageIDs as $message): ?>
+                        <option> <? echo $message; ?> </option>
+                        <? endforeach; ?>
                     </select>
                     <small id="MessageIDhelpInline" class="text-muted">
                         The ID of the message, which displays this button. In other words; where is it attached.
