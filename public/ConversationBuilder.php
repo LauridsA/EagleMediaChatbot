@@ -1,28 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Bruger
- * Date: 10-Jun-18
- * Time: 11:49
- */
-
-class ConversationBuilder
-{
-    public function getData()
-    {
-        // TODO call ORM to get the data
-        return 1;
-    }
-}
-$MessageIDs = array(
-        1 => 1,
-        2 => 2,
-        3 => 3,
-        4 => 4,
-        5 => 5,
-);
-?>
-
 <html lang="en">
     <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -35,13 +10,11 @@ $MessageIDs = array(
     <div class="alert-div" style="width: 250px; position: fixed; height: 50px; left: 250px; top: 70px;">
 
         <form>
+            <!--
             <div class="alert alert-danger" role="alert">
                 Message IDs 5, 6, 7, 8 9 and 10 are reserved
             </div>
-            <div class="form-group">
-                <label for="MessageID">Message ID</label>
-                <input type="text" class="form-control" id="MessageID" aria-describedby="emailHelp" placeholder="Message ID...">
-            </div>
+            -->
             <div class="form-group">
                 <label for="QuestionText">Question Text</label>
                 <input type="text" class="form-control" id="QuestionText" aria-describedby="emailHelp" placeholder="Question / message...">
@@ -90,20 +63,30 @@ $MessageIDs = array(
         </div>
     </div>
 
+<?php
+    /**
+     * Created by PhpStorm.
+     * User: Bruger
+     * Date: 10-Jun-18
+     * Time: 11:49
+     */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    class ConversationBuilder
+    {
+        public function getData()
+        {
+            // TODO call ORM to get the data
+            return 1;
+        }
+    }
+    $MessageIDs = array(
+        1 => 1,
+        2 => 2,
+        3 => 3,
+        4 => 4,
+        5 => 5,
+    );
+?>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
