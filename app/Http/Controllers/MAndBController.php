@@ -26,30 +26,45 @@ class MAndBController extends Controller
         return $buttons;
     }
 
-    public function addButton()
+    public function addButton(Request $request)
     {
-        $questionText = Input::post('QuestionText');
-        return redirect('/ConversationBuilder')->with('status', 'you saved the button');
+        $ButtonText = $request->input('ButtonText');
+        $ButtonValue = $request->input('ButtonValue');
+        $NextMessageID = $request->input('NextMessageID');
+        $MID = $request->input('MID');
+        $QuestionText = trim($ButtonText);
+        $ButtonValue = trim($ButtonValue);
+        $NextMessageID = trim($NextMessageID);
+        $MID = trim($MID);
+        if (empty($QuestionText) || empty($ButtonValue) || empty($NextMessageID) || empty($MID)){
+            return redirect('/ConversationBuilder')->with('status', 'please fill all the fields');
+        } else {
+            $button = new App\CustomButton();
+            $button->name = $ButtonText;
+            $button->value = $ButtonValue;
+            $button->mid = $MID;
+            $button->next_message_id = $NextMessageID;
+            $button->save();
+            return redirect('/ConversationBuilder')->with('status', 'you saved the button');
+        }
     }
 
     public function addMessage(Request $request)
     {
-        $faggot = $request->input('Delay');
-        $this-> debug_to_console($faggot);
-//        if (!isset($request->input('Delay'))){
-//            $this-> debug_to_console('delay not set');
-//        }
-//        if (!isset($_POST["QuestionText"])){
-//            $this-> debug_to_console('question text not set');
-//        }
-//        $questionText =  $_POST["QuestionText"];
-//        $delay = $_POST["Delay"];
-//        $message = new App\Message();
-//        $message->message = $questionText;
-//        $message->delay = $delay;
-//        //$message->save();
-//        $this-> debug_to_console($questionText . ' ' . $delay);
-        return redirect('/ConversationBuilder')->with('status', 'you saved the message');
+        $delay = $request->input('Delay');
+        $QuestionText = $request->input('QuestionText');
+        $delay = trim($delay);
+        $QuestionText = trim($QuestionText);
+        if (empty($delay) || empty($QuestionText)) {
+            return redirect('/ConversationBuilder')->with('status', 'please set the inputs in the fields');
+        } else {
+            $message = new App\Message();
+            $message->message = $QuestionText;
+            $message->delay = $delay;
+            $message->image = '';
+            $message->save();
+            return redirect('/ConversationBuilder')->with('status', 'you saved the message');
+        }
     }
 
     public function removeButton()

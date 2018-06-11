@@ -78,12 +78,12 @@ $AllMessages = $CB->getAllData();
         <div class="form-group">
             <label for="QuestionText">Question Text</label>
             <input type="text" class="form-control" id="QuestionText" aria-describedby="emailHelp"
-                   placeholder="Question / message...">
+                   placeholder="Question / message..." name="QuestionText">
         </div>
         <div class="form-group">
             <label for="Delay">Delay</label>
             <input type="text" class="form-control" id="Delay" aria-describedby="emailHelp"
-                   placeholder="Seconds before displaying...">
+                   placeholder="Seconds before displaying..." name="Delay">
         </div>
         <button type="submit" id="submitMessage" class="btn btn-primary">Submit</button>
     </form>
@@ -91,22 +91,18 @@ $AllMessages = $CB->getAllData();
         <form id="formButton" role="form" method="post" action="{{url('button')}}">
             {{ csrf_field() }}
             <div class="form-group">
-                <label for="ButtonID">Button ID</label>
-                <input type="text" class="form-control" id="ButtonID" aria-describedby="emailHelp" placeholder="ID...">
-            </div>
-            <div class="form-group">
                 <label for="ButtonText">Button Name</label>
-                <input type="text" class="form-control" id="ButtonText" aria-describedby="emailHelp"
+                <input type="text" name="ButtonText" class="form-control" id="ButtonText" aria-describedby="emailHelp"
                        placeholder="Name/Answer...">
             </div>
             <div class="form-group">
                 <label for="ButtonValue">Button Value</label>
-                <input type="text" class="form-control" id="ButtonValue" aria-describedby="emailHelp"
+                <input type="text" name="ButtonValue" class="form-control" id="ButtonValue" aria-describedby="emailHelp"
                        placeholder="Value...">
             </div>
             <div class="form-group">
                 <label for="NextMessageID">Next Message ID</label>
-                <input type="text" class="form-control" id="NextMessageID" aria-describedby="emailHelp"
+                <input type="text" name="NextMessageID" class="form-control" id="NextMessageID" aria-describedby="emailHelp"
                        placeholder="ID of next message...">
                 <small id="NextMessageIDhelpInline" class="text-muted">
                     Pressing this button will take the user to the message with the ID specified here.
@@ -114,9 +110,12 @@ $AllMessages = $CB->getAllData();
             </div>
             <div class="form-group">
                 <label for="MID">Select Message</label>
-                <select class="form-control" id="MID">
-                    <?php foreach ($MessageIDs as $message): ?>
-                    <option> <?php echo $message; ?> </option>
+                <select class="form-control" id="MID" name="MID">
+                    <?php foreach ($MessageIDs as $message):
+                    $trimmed = str_replace("{\"id\":", "", $message);
+                    $trimmed = str_replace("}", "", $trimmed);
+                    ?>
+                    <option> <?php echo $trimmed; ?> </option>
                     <?php endforeach; ?>
                 </select>
                 <small id="MessageIDhelpInline" class="text-muted">

@@ -8,6 +8,6 @@ class CustomButton extends Model
 {
     //
     protected $fillable = [
-        'name', 'value', 'messages_id',  'next_message_id'
+        'name', 'value', 'mid',  'next_message_id'
     ];
 }
