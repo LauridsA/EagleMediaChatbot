@@ -69,19 +69,19 @@ class WelcomeConversation extends Conversation
             $responseArray[] = [
                 'pattern' => '.*',
                 'callback' => function (Answer $answer) {
-                    if ($answer->getText() == "UPDATES_PAYLOAD") {
+                    if ($answer->getText() == "Afmeld opdateringer") {
                         $ctr = new SubscriptionController();
                         $ctr->checkBroadcastStatus($this->getBot());
-                    } elseif ($answer->getText() == "EMAIL_PAYLOAD") {
+                    } elseif ($answer->getText() == "Tilmeld Nyhedsbrev (email)") {
                         $ctr = new SubscriptionController();
                         $ctr->checkEmailStatus($this->getBot());
-                    }elseif ($answer->getText() == "Tilmeld Nyhedsbrev (email)") {
+                    }elseif ($answer->getText() == "Tilmed opdateringer") {
                         $ctr = new SubscriptionController();
                         $ctr->checkBroadcastStatus($this->getBot());
-                    }elseif ($answer->getText() == "Start") {
-                        $ctr = new BotManController();
-                        $ctr->startConversation($this->getBot());
-                    } else{
+                    } elseif ($answer->getText() == "Afmeld Nyhedsbrev (email)") {
+                        $ctr = new SubscriptionController();
+                        $ctr->checkEmailStatus($this->getBot());
+                    }else{
                         $ctr = new BotManController();
                         $ctr->startConversation($this->getBot());
                     }
