@@ -135,8 +135,12 @@ $AllMessages = $CB->getAllData();
             <div class="card-body">
                 <h6 class="card-title"> Message ID: <?php echo $message['id']; ?> </h6>
                 <?php echo $message['message']; ?>
-                <button style="float: right" type="button" class="btn btn-danger">Delete</button>
-                <button style="float: right" type="button" class="btn btn-info">Edit</button>
+                <form id="formDeleteMessage" role="form" method="post" action="{{url('messageDel')}}">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="messageid" value="<?php echo $message['id']; ?>" style="overflow-x: hidden; width: 1px; float: left; height: 1px; overflow-y: hidden; position: fixed;">
+                    <button style="float: right" type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <!-- <button style="float: right" type="button" class="btn btn-info">Edit</button> -->
             </div>
             <ul class="list-group list-group-flush">
                 <?php $ctr = new ConversationBuilder();
@@ -147,7 +151,7 @@ $AllMessages = $CB->getAllData();
                     <b><?php echo $button['next_message_id']; ?></b>
                     <form id="formDelete" role="form" method="post" action="{{url('buttonDel')}}">
                         {{ csrf_field() }}
-                        <input type="hidden" name="id" value="<?php echo $button['id']; ?>" style="overflow-x: hidden; width: 1px; float: left; height: 1px; overflow-y: hidden; position: fixed;">
+                        <input type="hidden" name="buttonid" value="<?php echo $button['id']; ?>" style="overflow-x: hidden; width: 1px; float: left; height: 1px; overflow-y: hidden; position: fixed;">
                         <button style="float: right" type="submit" class="btn btn-danger buttonDel" name="buttonDel">Delete</button>
                     </form>
                     <!-- <button style="float: right" type="button" class="btn btn-info">Edit</button> -->

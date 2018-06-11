@@ -69,15 +69,29 @@ class MAndBController extends Controller
 
     public function removeButton(Request $request)
     {
-        $id = $request->input('id');
+        $id = $request->input('buttonid');
+        if (empty($id)) {
+            return redirect('/ConversationBuilder')->with('status', 'An error occurred. Please refresh');
+        }
         $customButton = App\CustomButton::find($id);
         $customButton->delete();
         return redirect('/ConversationBuilder')->with('status', 'Button deleted');
     }
 
-    public function removeMessage()
+    public function removeMessage(Request $request)
     {
-        // TODO delete using ORM
+        $id = $request->input('messageid');
+        if (empty($id)) {
+            return redirect('/ConversationBuilder')->with('status', 'An error occurred. Please refresh');
+        }
+        $attachedButtons = App\CustomButton::where('next_message_id', $id)->get();
+        if (empty($attachedButtons)){
+            $this->debug_to_console($attachedButtons);
+            return redirect('/ConversationBuilder')->with('status', 'Buttons are attached. Please remove them first.');
+        }
+        $customButton = App\CustomButton::find($id);
+        $customButton->delete();
+        return redirect('/ConversationBuilder')->with('status', 'Message deleted');
     }
 
     public function debug_to_console($data)
@@ -85,7 +99,6 @@ class MAndBController extends Controller
         $output = $data;
         if (is_array($output))
             $output = implode(',', $output);
-
         echo "<script>alert( 'Debug Objects: " . $output . "' );</script>";
     }
 }

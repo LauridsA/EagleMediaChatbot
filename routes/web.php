@@ -17,6 +17,7 @@ Route::get('/', function () {
 Route::get('/ConversationBuilder', function () {
    return view('ConversationBuilder');
 });
+Route::post('messageDel', "MAndBController@removeMessage");
 Route::post('buttonDel', "MAndBController@removeButton");
 Route::post('button',"MAndBController@addButton");
 Route::post('message',"MAndBController@addMessage");
