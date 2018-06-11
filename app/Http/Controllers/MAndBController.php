@@ -34,7 +34,23 @@ class MAndBController extends Controller
 
     public function addMessage()
     {
-            $questionText = Input::post('QuestionText');
+        $posted = $_POST;
+        $this-> debug_to_console($posted);
+        $request = Input::instance()->request->get('Delay');
+        $this-> debug_to_console($request);
+//        if (!isset($request->input('Delay'))){
+//            $this-> debug_to_console('delay not set');
+//        }
+//        if (!isset($_POST["QuestionText"])){
+//            $this-> debug_to_console('question text not set');
+//        }
+        $questionText =  $_POST["QuestionText"];
+        $delay = $_POST["Delay"];
+        $message = new App\Message();
+        $message->message = $questionText;
+        $message->delay = $delay;
+        //$message->save();
+        $this-> debug_to_console($questionText . ' ' . $delay);
         return redirect('/ConversationBuilder')->with('status', 'you saved the message');
     }
 

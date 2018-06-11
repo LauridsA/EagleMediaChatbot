@@ -2,6 +2,7 @@
 
 namespace App\Conversations;
 
+use App\Http\Controllers\BotManController;
 use App\Http\Controllers\SubscriptionController;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Question;
@@ -69,12 +70,21 @@ class WelcomeConversation extends Conversation
             $responseArray[] = [
                 'pattern' => '.*',
                 'callback' => function (Answer $answer) {
-
-                    if (trim($answer->getText()) == '') {
-                        $this->say('skriv noget din nar');
-                        $this->makeQuestion(2);
-                    } else {
-                        $this->say('du skrev: ' . $answer->getText());
+                    if ($answer->getText() == "UPDATES_PAYLOAD") {
+                        $ctr = new SubscriptionController();
+                        $ctr->checkBroadcastStatus($this->getBot());
+                    }
+                    if ($answer->getText() == "EMAIL_PAYLOAD") {
+                        $ctr = new SubscriptionController();
+                        $ctr->checkEmailStatus($this->getBot());
+                    }
+                    if ($answer->getText() == "Nyheder") {
+                        $ctr = new SubscriptionController();
+                        $ctr->checkBroadcastStatus($this->getBot());
+                    }
+                    if ($answer->getText() == "Start") {
+                        $ctr = new BotManController();
+                        $ctr->startConversation($this->getBot());
                     }
                 }
             ];
