@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App;
+use Illuminate\Support\Facades\Input;
 
 class MAndBController extends Controller
 {
@@ -27,12 +28,14 @@ class MAndBController extends Controller
 
     public function addButton()
     {
-
+        $questionText = Input::post('QuestionText');
+        return redirect('/ConversationBuilder')->with('status', 'you saved the button');
     }
 
     public function addMessage()
     {
-
+            $questionText = Input::post('QuestionText');
+        return redirect('/ConversationBuilder')->with('status', 'you saved the message');
     }
 
     public function removeButton()
@@ -43,5 +46,13 @@ class MAndBController extends Controller
     public function removeMessage()
     {
 
+    }
+
+    public function debug_to_console( $data ) {
+        $output = $data;
+        if ( is_array( $output ) )
+            $output = implode( ',', $output);
+
+        echo "<script>alert( 'Debug Objects: " . $output . "' );</script>";
     }
 }
