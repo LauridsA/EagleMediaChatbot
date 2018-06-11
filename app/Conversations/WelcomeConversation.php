@@ -75,7 +75,7 @@ class WelcomeConversation extends Conversation
                     } elseif ($answer->getText() == "EMAIL_PAYLOAD") {
                         $ctr = new SubscriptionController();
                         $ctr->checkEmailStatus($this->getBot());
-                    }elseif ($answer->getText() == "Nyheder") {
+                    }elseif ($answer->getText() == "Tilmeld Nyhedsbrev (email)") {
                         $ctr = new SubscriptionController();
                         $ctr->checkBroadcastStatus($this->getBot());
                     }elseif ($answer->getText() == "Start") {
