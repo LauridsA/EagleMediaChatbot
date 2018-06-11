@@ -17,7 +17,7 @@ Route::get('/', function () {
 Route::get('/ConversationBuilder', function () {
    return view('ConversationBuilder');
 });
-Route::post('ajax', "MAndBController@removeButton");
+Route::post('buttonDel', "MAndBController@removeButton");
 Route::post('button',"MAndBController@addButton");
 Route::post('message',"MAndBController@addMessage");
 Route::match(['get', 'post'], '/botman', 'BotManController@handle');

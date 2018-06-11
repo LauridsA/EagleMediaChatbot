@@ -145,8 +145,12 @@ $AllMessages = $CB->getAllData();
                 <li class="list-group-item"> Button ID: <b><?php echo $button['id']; ?></b>, Button text:
                     <b><?php echo $button['name']; ?></b>, next message ID:
                     <b><?php echo $button['next_message_id']; ?></b>
-                    <button style="float: right" type="button" class="btn btn-danger buttonDel" value="<?php echo $button['id']; ?>">Delete</button>
-                    <button style="float: right" type="button" class="btn btn-info">Edit</button>
+                    <form id="formDelete" role="form" method="post" action="{{url('buttonDel')}}">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="id" value="<?php echo $button['id']; ?>" style="overflow-x: hidden; width: 1px; float: left; height: 1px; overflow-y: hidden; position: fixed;">
+                        <button style="float: right" type="submit" class="btn btn-danger buttonDel" name="buttonDel">Delete</button>
+                    </form>
+                    <!-- <button style="float: right" type="button" class="btn btn-info">Edit</button> -->
                 </li>
                 <?php endforeach; ?>
             </ul>
@@ -159,12 +163,12 @@ $AllMessages = $CB->getAllData();
         crossorigin="anonymous"></script>
 <script>
     jQuery(document).ready(function(){
-        jQuery('.buttonDel').click(function(){
+        jQuery('.buttonDel2222').click(function(){
             var clickBtnValue = jQuery(this).val();
             var ajaxurl = '../../App/Helpers/ajaxbutton.php',
                 data =  {'action': clickBtnValue};
             jQuery.post(ajaxurl, data, function () {
-                alert("action performed successfully"); // TODO fix this ajax... check routes maybe
+                alert("action performed successfully"); // TODO fix this ajax...
             });
         });
 

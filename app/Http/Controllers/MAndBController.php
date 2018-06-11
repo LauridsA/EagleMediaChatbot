@@ -67,9 +67,12 @@ class MAndBController extends Controller
         }
     }
 
-    public function removeButton($id)
+    public function removeButton(Request $request)
     {
-        $this->debug_to_console($id);
+        $id = $request->input('id');
+        $customButton = App\CustomButton::find($id);
+        $customButton->delete();
+        return redirect('/ConversationBuilder')->with('status', 'Button deleted');
     }
 
     public function removeMessage()
