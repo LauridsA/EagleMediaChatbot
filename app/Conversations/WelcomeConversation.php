@@ -66,23 +66,22 @@ class WelcomeConversation extends Conversation
             }
 
             // TODO add NLP functionality
-            // Append responseArray to catch non-button messaging
             $responseArray[] = [
                 'pattern' => '.*',
                 'callback' => function (Answer $answer) {
                     if ($answer->getText() == "UPDATES_PAYLOAD") {
                         $ctr = new SubscriptionController();
                         $ctr->checkBroadcastStatus($this->getBot());
-                    }
-                    if ($answer->getText() == "EMAIL_PAYLOAD") {
+                    } elseif ($answer->getText() == "EMAIL_PAYLOAD") {
                         $ctr = new SubscriptionController();
                         $ctr->checkEmailStatus($this->getBot());
-                    }
-                    if ($answer->getText() == "Nyheder") {
+                    }elseif ($answer->getText() == "Nyheder") {
                         $ctr = new SubscriptionController();
                         $ctr->checkBroadcastStatus($this->getBot());
-                    }
-                    if ($answer->getText() == "Start") {
+                    }elseif ($answer->getText() == "Start") {
+                        $ctr = new BotManController();
+                        $ctr->startConversation($this->getBot());
+                    } else{
                         $ctr = new BotManController();
                         $ctr->startConversation($this->getBot());
                     }
