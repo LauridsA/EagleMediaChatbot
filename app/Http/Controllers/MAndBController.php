@@ -67,9 +67,9 @@ class MAndBController extends Controller
         }
     }
 
-    public function removeButton()
+    public function removeButton($id)
     {
-        // TODO delete using ORM
+        $this->debug_to_console($id);
     }
 
     public function removeMessage()

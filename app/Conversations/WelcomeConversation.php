@@ -75,13 +75,13 @@ class WelcomeConversation extends Conversation
                     } elseif ($answer->getText() == "Tilmeld Nyhedsbrev (email)") {
                         $ctr = new SubscriptionController();
                         $ctr->checkEmailStatus($this->getBot());
-                    }elseif ($answer->getText() == "Tilmed opdateringer") {
+                    } elseif ($answer->getText() == "Tilmed opdateringer") {
                         $ctr = new SubscriptionController();
                         $ctr->checkBroadcastStatus($this->getBot());
                     } elseif ($answer->getText() == "Afmeld Nyhedsbrev (email)") {
                         $ctr = new SubscriptionController();
                         $ctr->checkEmailStatus($this->getBot());
-                    }else{
+                    } else {
                         $ctr = new BotManController();
                         $ctr->startConversation($this->getBot());
                     }

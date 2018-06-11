@@ -31,17 +31,20 @@ class ConversationBuilder
         return $result;
     }
 
-    public function deleteButton()
+    public function deleteButton($id)
     {
-
+        $ctr = new Controllers\MAndBController();
+        $this->debug_to_console($id);
+        //$ctr->removeButton($id);
     }
 
     public function deleteMessage()
     {
-
+        $ctr = new Controllers\MAndBController();
+        $ctr->removeMessage();
     }
 
-    function debug_to_console($data)
+    public function debug_to_console($data)
     {
         $output = $data;
         if (is_array($output))
@@ -54,7 +57,6 @@ $CB = new ConversationBuilder();
 $MessageIDs = $CB->getData();
 $AllMessages = $CB->getAllData();
 ?>
-
 <html lang="en">
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -143,7 +145,7 @@ $AllMessages = $CB->getAllData();
                 <li class="list-group-item"> Button ID: <b><?php echo $button['id']; ?></b>, Button text:
                     <b><?php echo $button['name']; ?></b>, next message ID:
                     <b><?php echo $button['next_message_id']; ?></b>
-                    <button style="float: right" type="button" class="btn btn-danger">Delete</button>
+                    <button style="float: right" type="button" class="btn btn-danger buttonDel" value="<?php echo $button['id']; ?>">Delete</button>
                     <button style="float: right" type="button" class="btn btn-info">Edit</button>
                 </li>
                 <?php endforeach; ?>
@@ -155,6 +157,20 @@ $AllMessages = $CB->getAllData();
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
+<script>
+    jQuery(document).ready(function(){
+        jQuery('.buttonDel').click(function(){
+            var clickBtnValue = jQuery(this).val();
+            var ajaxurl = '../../App/Helpers/ajaxbutton.php',
+                data =  {'action': clickBtnValue};
+            jQuery.post(ajaxurl, data, function () {
+                alert("action performed successfully"); // TODO fix this ajax... check routes maybe
+            });
+        });
+
+    });
+</script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
