@@ -85,12 +85,12 @@ class MAndBController extends Controller
             return redirect('/ConversationBuilder')->with('status', 'An error occurred. Please refresh');
         }
         $attachedButtons = App\CustomButton::where('next_message_id', $id)->get();
-        if (empty($attachedButtons)){
+        if (!empty($attachedButtons)){
             $this->debug_to_console($attachedButtons);
             return redirect('/ConversationBuilder')->with('status', 'Buttons are attached. Please remove them first.');
         }
-        $customButton = App\CustomButton::find($id);
-        $customButton->delete();
+        $message = App\Message::find($id);
+        $message->delete();
         return redirect('/ConversationBuilder')->with('status', 'Message deleted');
     }
 
