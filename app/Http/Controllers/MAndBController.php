@@ -36,7 +36,7 @@ class MAndBController extends Controller
         $ButtonValue = trim($ButtonValue);
         $NextMessageID = trim($NextMessageID);
         $MID = trim($MID);
-        if (empty($QuestionText) || empty($ButtonValue) || empty($NextMessageID) || empty($MID)){
+        if (empty($QuestionText) || empty($ButtonValue) || empty($NextMessageID) || empty($MID)) {
             return redirect('/ConversationBuilder')->with('status', 'please fill all the fields');
         } else {
             $button = new App\CustomButton();
@@ -69,18 +69,19 @@ class MAndBController extends Controller
 
     public function removeButton()
     {
-
+        // TODO delete using ORM
     }
 
     public function removeMessage()
     {
-
+        // TODO delete using ORM
     }
 
-    public function debug_to_console( $data ) {
+    public function debug_to_console($data)
+    {
         $output = $data;
-        if ( is_array( $output ) )
-            $output = implode( ',', $output);
+        if (is_array($output))
+            $output = implode(',', $output);
 
         echo "<script>alert( 'Debug Objects: " . $output . "' );</script>";
     }

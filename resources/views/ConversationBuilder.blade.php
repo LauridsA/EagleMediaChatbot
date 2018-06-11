@@ -102,7 +102,8 @@ $AllMessages = $CB->getAllData();
             </div>
             <div class="form-group">
                 <label for="NextMessageID">Next Message ID</label>
-                <input type="text" name="NextMessageID" class="form-control" id="NextMessageID" aria-describedby="emailHelp"
+                <input type="text" name="NextMessageID" class="form-control" id="NextMessageID"
+                       aria-describedby="emailHelp"
                        placeholder="ID of next message...">
                 <small id="NextMessageIDhelpInline" class="text-muted">
                     Pressing this button will take the user to the message with the ID specified here.
