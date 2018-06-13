@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Conversations\BroadcastConversation;
 use App\Conversations\SubscriptionConversation;
 use BotMan\BotMan\BotMan;
-use App\FacebookSubscription;
+use App\GraphHelper;
 
 class SubscriptionController extends Controller
 {
@@ -21,7 +21,7 @@ class SubscriptionController extends Controller
     public function addUserToLabel($id)
     {
         try {
-            $whatever = new FacebookSubscription();
+            $whatever = new GraphHelper();
             $whatever->addToLabel($id);
 
         } catch (Exception $ex) {
@@ -32,7 +32,7 @@ class SubscriptionController extends Controller
     public function removeUserFromLabel($id)
     {
         try {
-            $whatever = new FacebookSubscription();
+            $whatever = new GraphHelper();
             $whatever->removeFromLabel($id);
         } catch (Exception $ex) {
             Bugsnag::notifyException($ex);
@@ -42,7 +42,7 @@ class SubscriptionController extends Controller
     public function retrieveLabel($id)
     {
         try {
-            $whatever = new FacebookSubscription();
+            $whatever = new GraphHelper();
             return $whatever->retrieveLabel($id);
         } catch (Exception $ex) {
             Bugsnag::notifyException($ex);

@@ -1,6 +1,6 @@
 <?php
 namespace App;
-class FacebookSubscription
+class GraphHelper
 {
 
     public function createLabel()

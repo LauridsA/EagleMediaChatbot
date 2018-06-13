@@ -89,6 +89,12 @@ class WelcomeConversation extends Conversation
             ];
 
             // Create the question, add the buttons, and ready to receive answers
+            if (isset($message['delay'])){
+                if (is_int($message['delay']))
+                    $this->bot->typesAndWaits($message['delay']);
+            } else {
+                $this->bot->typesAndWaits(2);
+            }
             $question = Question::create($message['message'])->addButtons($buttonArray);
             $this->ask($question, $responseArray);
         }
