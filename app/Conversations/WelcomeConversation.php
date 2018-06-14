@@ -19,7 +19,7 @@ class WelcomeConversation extends Conversation
      *
      * @param $id message to load from the database
      */
-    public function makeQuestion($id) // TODO fix bug where you have to write twice to get to ex. email sub convo
+    public function makeQuestion($id)
     {
         // If message is start of sub, else run normal builder
         if ($id === 5) {
@@ -49,7 +49,6 @@ class WelcomeConversation extends Conversation
                 ];
             }
 
-            // TODO Non-button answers should elicit an error, but keep asking for a response.
             // Fill the response array using button data
             foreach ($buttonValues as $button) {
                 $responseArray[] =
@@ -65,7 +64,7 @@ class WelcomeConversation extends Conversation
                     ];
             }
 
-            // TODO add NLP functionality
+            // Append to the end of the $responseArray
             $responseArray[] = [
                 'pattern' => '.*',
                 'callback' => function (Answer $answer) {

@@ -35,6 +35,7 @@ class BroadcastConversation extends Conversation
             $question = Question::create($message['message'])->addButtons($buttonArray);
             $this->ask($question, function (Answer $answer) use ($buttonValues) {
                 if ($answer->getValue() == $buttonValues[0]['value']) {
+                    $this->say('Fedt! :) Jeg skriver dig op! (Du kan altid ændre din mening senere');
                     $ctr = new SubscriptionController();
                     $ctr->addUserToLabel((string)$this->bot->getUser()->getId());
                     $ctr = new BotManController();

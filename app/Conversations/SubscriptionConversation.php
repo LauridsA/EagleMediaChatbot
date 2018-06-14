@@ -162,7 +162,7 @@ class SubscriptionConversation extends Conversation
                     $ctr = new BotManController();
                     $ctr->startConversation($this->getBot());
                 } else {
-                    if ($answer->getValue() == 'unsub') {
+                    if ($answer->getValue() == $buttonValues['value']) {
                         try {
                             $ctr = new ClientController();
                             $ctr->unsubscribe($this->bot->getUser()->getId());
