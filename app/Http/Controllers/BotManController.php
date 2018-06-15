@@ -35,7 +35,8 @@ class BotManController extends Controller
         $bot->startConversation(new WelcomeConversation());
     }
 
-    public function checkBroadcastStatus(BotMan $bot) {
+    public function checkBroadcastStatus(BotMan $bot)
+    {
         $ctr = new SubscriptionController();
         $ctr->checkBroadcastStatus($bot);
     }

@@ -1,8 +1,9 @@
 <?php
+
 namespace App;
+
 class GraphHelper
 {
-
     public function createLabel()
     {
         $labelJSON = '{"name": "SubToBroadcast"}';

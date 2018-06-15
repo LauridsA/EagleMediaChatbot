@@ -4,7 +4,8 @@ echo 'Hello world!';
 require_once('..\App\FacebookSubscription.php');
 
 
-class BroadcastMessage {
+class BroadcastMessage
+{
 
     public function retrieveLabel(string $id)
     {
@@ -23,9 +24,11 @@ class BroadcastMessage {
     }
 }
 
-class Broadcast {
+class Broadcast
+{
 
-    public function addToLabel(string $id){
+    public function addToLabel(string $id)
+    {
         $addJSON = '{"user":' . $id . '}';
         $labelID = "2439019392790895";
         $access_token = getenv('FACEBOOK_TOKEN');

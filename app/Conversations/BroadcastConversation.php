@@ -70,6 +70,7 @@ class BroadcastConversation extends Conversation
                     'next_message_id' => $button['next_message_id']
                 ];
             }
+
             $question = Question::create($message['message'])->addButtons($buttonArray);
             $this->ask($question, function (Answer $answer) use ($buttonValues) {
                 if ($answer->getValue() == $buttonValues[0]['value']) {
@@ -95,15 +96,15 @@ class BroadcastConversation extends Conversation
         $ctr = new SubscriptionController();
         $theid = (string)$this->bot->getUser()->getId();
         $subbed = $ctr->retrieveLabel($theid);
-            if ($subbed) {
-                $this->say('Du er sat op til at modtage beskeder herinde.');
-                $this->unSubToBroadcast(8);
-            } else if (!$subbed) {
-                $this->say('Du er sat op til ikke at modtage beskeder herinde.');
-                $this->subToBroadcast(9);
-            } else {
-                $this->say('you broke it');
-            }
+        if ($subbed) {
+            $this->say('Du er sat op til at modtage beskeder herinde.');
+            $this->unSubToBroadcast(8);
+        } else if (!$subbed) {
+            $this->say('Du er sat op til ikke at modtage beskeder herinde.');
+            $this->subToBroadcast(9);
+        } else {
+            $this->say('you broke it');
+        }
     }
 
     public function run()

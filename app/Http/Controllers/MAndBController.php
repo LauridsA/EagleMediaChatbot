@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App;
-use Illuminate\Support\Facades\Input;
 
 class MAndBController extends Controller
 {
@@ -88,7 +87,7 @@ class MAndBController extends Controller
             $message = App\Message::find($id);
             $message->delete();
             return redirect('/ConversationBuilder')->with('status', 'Message deleted');
-        } catch (\Illuminate\Database\QueryException $ex){
+        } catch (\Illuminate\Database\QueryException $ex) {
             return redirect('/ConversationBuilder')->with('status', 'It looks like there are still buttons attached. Please remove them first.');
         }
     }

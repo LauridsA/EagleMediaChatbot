@@ -15,11 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/ConversationBuilder', function () {
-   return view('ConversationBuilder');
+    return view('ConversationBuilder');
 });
 Route::post('messageDel', "MAndBController@removeMessage");
 Route::post('buttonDel', "MAndBController@removeButton");
-Route::post('button',"MAndBController@addButton");
-Route::post('message',"MAndBController@addMessage");
+Route::post('button', "MAndBController@addButton");
+Route::post('message', "MAndBController@addMessage");
 Route::match(['get', 'post'], '/botman', 'BotManController@handle');
 Route::get('/botman/tinker', 'BotManController@tinker');
