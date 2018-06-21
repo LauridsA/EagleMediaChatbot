@@ -2,14 +2,18 @@
 
 namespace App\Conversations;
 
+use App\Client;
 use App\Http\Controllers\BotManController;
 use App\Http\Controllers\SubscriptionController;
+use App\User;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use App\Message;
 use App\CustomButton;
+use App\InterestTrigger;
+use App\UserInterest;
 
 class WelcomeConversation extends Conversation
 {
@@ -21,6 +25,7 @@ class WelcomeConversation extends Conversation
      */
     public function makeQuestion($id)
     {
+        $this->saveInterest($id);
         // If message is start of sub, else run normal builder
         if ($id === 5) {
             $ctr = new SubscriptionController();
@@ -96,6 +101,33 @@ class WelcomeConversation extends Conversation
             }
             $question = Question::create($message['message'])->addButtons($buttonArray);
             $this->ask($question, $responseArray);
+        }
+    }
+
+    /**
+     * Save Interest based on message
+     *
+     * @param $id message ID used to to load interest from the database
+     */
+    public function saveInterest($id)
+    {
+        try {
+            $interest_trigger = InterestTrigger::where('message_id', $id)->first();
+            $client = Client::where('facebook_id', $this->bot->getUser()->getId())->first();
+            $interest_id = $interest_trigger['interest_id'];
+            $user_id = $client['id'];
+            if (isset($interest_id) && isset($user_id)){
+                $user_interest_prev = UserInterest::where('user_id', $user_id)->where('interest_id', $interest_id)->first();
+                if (isset($user_interest_prev)){
+                    return;
+                }
+                $user_interest = new UserInterest();
+                $user_interest->interest_id = $interest_id;
+                $user_interest->user_id = $user_id;
+                $user_interest->save();
+            }
+        } catch (\Exception $e) {
+            return;
         }
     }
 
